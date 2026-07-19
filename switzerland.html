@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>스위스 허니문 · 2026.09</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<style>
+  :root{
+    --bg:#fafaf7; --card:#ffffff; --ink:#1f2024; --muted:#6b6f76;
+    --line:#e8e6df; --accent:#b91c1c; --accent-soft:#fee2e2; --ok:#15803d;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",system-ui,sans-serif;
+    font-size:15px; line-height:1.55; -webkit-text-size-adjust:100%;}
+  a{color:var(--accent); text-decoration:none}
+  a:active{opacity:.6}
+  .wrap{max-width:680px; margin:0 auto; padding:14px 14px 80px;}
+  header.hero{
+    background:linear-gradient(135deg,#991b1b,#1e293b);
+    color:#fff; border-radius:18px; padding:20px; margin-bottom:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+  }
+  header.hero h1{margin:0 0 4px; font-size:22px; letter-spacing:-0.01em}
+  header.hero .sub{opacity:.85; font-size:13px}
+  header.hero .meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:12.5px}
+  header.hero .meta span{background:rgba(255,255,255,.12); padding:5px 9px; border-radius:999px}
+
+  /* 국가 네비 */
+  nav.trip{display:flex; gap:6px; margin-bottom:10px}
+  nav.trip a{
+    flex:1; text-align:center; padding:8px 10px; border:1px solid var(--line);
+    background:#fff; border-radius:10px; font-size:13px; font-weight:600; color:var(--ink);
+  }
+  nav.trip a.cur{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  nav.days{
+    position:sticky; top:0; z-index:50;
+    background:var(--bg); padding:8px 0; margin:-4px -2px 10px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    display:flex; gap:6px;
+    border-bottom:1px solid var(--line);
+  }
+  nav.days::-webkit-scrollbar{display:none}
+  nav.days button{
+    flex:0 0 auto; border:1px solid var(--line); background:#fff;
+    padding:8px 12px; border-radius:999px; font-size:13px; color:var(--ink);
+    font-weight:600;
+  }
+  nav.days button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  section.day{display:none}
+  section.day.active{display:block}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:14px; margin-bottom:12px;
+  }
+  .card h2{margin:0 0 8px; font-size:17px; letter-spacing:-0.01em}
+  .card h3{margin:14px 0 6px; font-size:14px; color:var(--muted); font-weight:600;
+    text-transform:uppercase; letter-spacing:.04em;}
+
+  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent);
+    padding:3px 8px; border-radius:999px; font-size:12px; font-weight:600;
+    margin-right:6px;}
+  .muted{color:var(--muted)}
+
+  ul.tl{list-style:none; padding:0; margin:0}
+  ul.tl li{
+    display:grid; grid-template-columns:54px 1fr; gap:10px;
+    padding:8px 0; border-top:1px dashed var(--line);
+  }
+  ul.tl li:first-child{border-top:0}
+  ul.tl .t{font-variant-numeric:tabular-nums; color:var(--accent); font-weight:700; font-size:13.5px}
+  ul.tl .what{font-size:14.5px}
+  ul.tl .what small{display:block; color:var(--muted); font-size:12.5px; margin-top:2px}
+
+  .map{height:280px; border-radius:12px; overflow:hidden; border:1px solid var(--line)}
+  .map.big{height:360px}
+
+  .checks{padding:0; margin:0; list-style:none}
+  .checks li{
+    display:flex; gap:10px; align-items:flex-start;
+    padding:8px 0; border-top:1px solid var(--line);
+  }
+  .checks li:first-child{border-top:0}
+  .checks input[type=checkbox]{
+    appearance:none; -webkit-appearance:none; width:20px; height:20px;
+    border:2px solid #c8cad0; border-radius:6px; flex:0 0 20px; margin-top:2px;
+    background:#fff;
+  }
+  .checks input[type=checkbox]:checked{
+    background:var(--ok); border-color:var(--ok);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3 3 7-7'/></svg>");
+    background-size:16px; background-repeat:no-repeat; background-position:center;
+  }
+  .checks label{flex:1; font-size:14.5px}
+  .checks li.done label{color:var(--muted); text-decoration:line-through}
+
+  details{border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff; margin-bottom:8px}
+  details summary{cursor:pointer; font-weight:600; outline:none; list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details[open] summary{margin-bottom:6px}
+
+  .row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .row a.btn{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    padding:7px 11px; border-radius:999px; font-size:13px; font-weight:600;
+  }
+  .row a.btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+  .note{background:#fff8ee; border:1px solid #f3d8a6; color:#7a4a00;
+    padding:10px 12px; border-radius:10px; font-size:13.5px}
+
+  footer{color:var(--muted); font-size:12px; text-align:center; padding:18px 0 0}
+
+  .leaflet-popup-content{margin:8px 12px; font-size:13px}
+  .leaflet-popup-content b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="trip">
+    <a href="honeymoon.html">🇬🇧 영국</a>
+    <a href="paris.html">🇫🇷 파리</a>
+    <a href="switzerland.html" class="cur">🇨🇭 스위스</a>
+  </nav>
+
+  <header class="hero">
+    <div class="sub">허니문 · 스위스 (Switzerland)</div>
+    <h1>스위스 허니문</h1>
+    <div class="sub">2026.09.18 (금) → 2026.09.23 (수) · 5박 6일 (귀국)</div>
+    <div class="meta">
+      <span>👫 성인 2명 (2 adults)</span>
+      <span>🛏 운터젠(2박) · 그린델발트 선스타(1박) · 취리히 MANY'S(1박)</span>
+      <span>🇨🇭 인터라켄 / 그린델발트 / 취리히 5박 6일</span>
+      <span>✈️ 9/22 19:30 취리히 출발 → 9/23 14:10 인천 도착</span>
+    </div>
+    <div class="row">
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Obere+Gasse%2C+Unterseen%2C+Bern+3800" target="_blank">운터젠 숙소 (Google Maps)</a>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Sunstar+Hotel+Grindelwald" target="_blank">선스타 호텔 (Google Maps)</a>
+      <a class="btn" href="https://www.google.com/maps/search/?api=1&query=MANY%27S+historical+city+central+APARTMENTS" target="_blank">취리히 숙소 (Google Maps)</a>
+    </div>
+  </header>
+
+  <nav class="days" id="dayNav">
+    <button data-day="overview" class="active">개요</button>
+    <button data-day="d8">8일 9/18</button>
+    <button data-day="d9">9일 9/19</button>
+    <button data-day="d10">10일 9/20</button>
+    <button data-day="d11">11일 9/21</button>
+    <button data-day="d12">12일 9/22</button>
+    <button data-day="d13">13일 9/23</button>
+    <button data-day="checklist">체크</button>
+  </nav>
+
+  <!-- ============ 개요 ============ -->
+  <section class="day active" data-day="overview">
+    <div class="card">
+      <h2>스위스 동선 지도</h2>
+      <div id="mapAll" class="map big"></div>
+      <p class="muted" style="margin:8px 0 0; font-size:12.5px">핀을 탭하면 주요 거점·링크가 표시됩니다.</p>
+    </div>
+
+    <div class="card">
+      <h2>스위스 일정 한눈에</h2>
+      <ul class="tl">
+        <li><span class="t">9/18 금</span><span class="what">파리 출발 → 인터라켄 웨스트 도착(15:53) · 운터젠 체크인 · 브리엔츠 호수(이젤트발트)<small>8일차</small></span></li>
+        <li><span class="t">9/19 토</span><span class="what">오전 융프라우요흐 Top of Europe · 오후 피르스트 (우천 시: 베른 당일치기)<small>9일차</small></span></li>
+        <li><span class="t">9/20 일</span><span class="what">인터라켄 → 그린델발트 기차 이동 · 선스타 호텔 체크인 (16:00) · 핑슈텍 루지<small>10일차</small></span></li>
+        <li><span class="t">9/21 월</span><span class="what">라우터브루넨 폭포 마을 → 취리히 이동 · 린덴호프 노을 & 강변 야경<small>11일차</small></span></li>
+        <li><span class="t">9/22 화</span><span class="what">취리히 반호프슈트라세 쇼핑 & 초콜릿 구매 → 취리히 공항 출발 (19:30)<small>12일차</small></span></li>
+        <li><span class="t">9/23 수</span><span class="what">인천 국제공항 14:10 도착 · 귀국<small>13일차</small></span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>스위스 여행 팁</h2>
+      <details open>
+        <summary>🎫 스위스 트래블 패스 (Swiss Travel Pass)</summary>
+        <p style="margin:6px 0 0; font-size:13.5px">
+          기차, 유람선, 버스 무제한 탑승 및 대부분의 산악열차 50% 할인. 연속/프렉시 티켓 일정 선택 필요.
+        </p>
+      </details>
+      <details>
+        <summary>🏔 날씨 및 복장 준비</summary>
+        <p style="margin:6px 0 0; font-size:13.5px">
+          고지대 산악지대(융프라우, 마테호른 등)는 9월에도 바람이 차고 추울 수 있으므로 경량 패딩 및 겹쳐 입을 옷 준비.
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ 8일차 ============ -->
+  <section class="day" data-day="d8">
+    <div class="card">
+      <h2>8일차 · 9/18 (금) <span class="pill">파리 → 스위스 이동 & 브리엔츠 호수</span></h2>
+      <p class="muted" style="margin:0 0 6px">파리 리옹역 → 바젤 환승 → 인터라켄 웨스트 도착 → 운터젠 체크인 & 이젤트발트(브리엔츠 호수)</p>
+      <div id="mapD8" class="map"></div>
+    </div>
+    <div class="card">
+      <h3>시간대별 타임라인</h3>
+      <ul class="tl">
+        <li><span class="t">09:30</span><span class="what">파리 숙소 체크아웃 & 파리 리옹역 (Gare de Lyon) 이동<small>출발 최소 40분 전 역 도착 권장</small></span></li>
+        <li><span class="t">10:22</span><span class="what">파리 리옹역 출발 (TGV Lyria)<small>프랑스 → 스위스 바젤행 초고속열차 (약 3시간 1분 소요)</small></span></li>
+        <li><span class="t">13:23</span><span class="what">바젤 역 (Basel SBB) 도착 & 환승<small>환승 대기시간 35분</small></span></li>
+        <li><span class="t">13:58</span><span class="what">바젤 역 출발 (SBB 기차)<small>인터라켄행 기차 탑승 (약 1시간 55분 소요)</small></span></li>
+        <li><span class="t">15:53</span><span class="what">인터라켄 웨스트 역 (Interlaken West) 도착 🇨🇭<small>스위스 인터라켄 입성</small></span></li>
+        <li><span class="t">16:15</span><span class="what">운터젠 숙소 체크인 (Obere Gasse, Unterseen)<small>역에서 도보 약 8분 · ★체크인 시 '인터라켄 게스트 카드(Visitor Card)' 무료 발급 받기</small></span></li>
+        <li><span class="t">17:00</span><span class="what">인터라켄 오스트 역 이동 → 103번 버스 탑승<small>숙소 게스트 카드 사용 (브리엔츠 호숫가 마을 이젤트발트행 버스 무료/할인)</small></span></li>
+        <li><span class="t">17:25</span><span class="what">이젤트발트 (Iseltwald) 도착 & 브리엔츠 호수 산책 📸<small>사랑의 불시착 피아노 촬영지 · 에메랄드빛 호수 감상</small></span></li>
+        <li><span class="t">18:50</span><span class="what">103번 버스로 인터라켄 복귀</span></li>
+        <li><span class="t">19:30</span><span class="what">운터젠 / 인터라켄 시내 저녁 식사<small>스위스 퐁뒤 (Fondue) 또는 뢰스티 (Rösti)</small></span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>이날 예약 & 팁 항목</h3>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="swiss-tgv" checked><label>파리 리옹역(10:22) → 바젤(13:23) TGV Lyria 기차표</label></li>
+        <li><input type="checkbox" data-key="swiss-sbb" checked><label>바젤(13:58) → 인터라켄 웨스트(15:53) SBB 기차표 (예매 완료)</label></li>
+        <li><input type="checkbox" data-key="unterseen-stay" checked><label>운터젠 숙소 2박 (Obere Gasse, Unterseen, Bern 3800) — 9/18~9/20</label></li>
+        <li><input type="checkbox" data-key="guest-card" checked><label>🎁 운터젠 숙소 체크인 시 '인터라켄 게스트 카드 (Visitor Card)' 무료 발급 받기 (103번 이젤트발트 버스 혜택)</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 9일차 ============ -->
+  <section class="day" data-day="d9">
+    <div class="card">
+      <h2>9일차 · 9/19 (토) <span class="pill">융프라우 & 피르스트</span></h2>
+      <p class="muted" style="margin:0 0 6px">오전 융프라우요흐 Top of Europe → 오후 그린델발트 피르스트 산책 / 액티비티</p>
+      <div id="mapD9" class="map"></div>
+    </div>
+    <div class="card">
+      <h3>메인 타임라인 (맑을 때)</h3>
+      <ul class="tl">
+        <li><span class="t">07:40</span><span class="what">운터젠 숙소 출발 → 그린델발트 터미널 (Grindelwald Terminal) 이동<small>인터라켄 오스트 기차 / 버스 탑승</small></span></li>
+        <li><span class="t">08:30</span><span class="what">그린델발트 터미널 출발 (아이거 익스프레스 곤돌라)<small>아이거 익스프레스 + 산악열차 (약 45분 만에 초고속 도착)</small></span></li>
+        <li><span class="t">09:15</span><span class="what">융프라우요흐 (Jungfraujoch Top of Europe) 관람 🏔<small>스핑크스 전망대 · 얼음궁전 · 만년설 산책 · 신라면 무료 컵라면</small></span></li>
+        <li><span class="t">11:40</span><span class="what">융프라우요흐 출발 → 그린델발트 마을 하산<small>그린델발트 마을 도착 후 점심 식사</small></span></li>
+        <li><span class="t">13:30</span><span class="what">그린델발트 피르스트 (First) 곤돌라 탑승<small>곤돌라 타고 피르스트 정상 이동 (약 25분)</small></span></li>
+        <li><span class="t">14:00</span><span class="what">피르스트 클리프 워크 (Cliff Walk) & 절벽 산책 📸<small>아찔한 절벽 구름다리 산책 · 아이거 북벽 포토존</small></span></li>
+        <li><span class="t">15:15</span><span class="what">보어트 (Bort) 역 이동 후 트로티바이크 (Trottibike 자전거) 탑승 🚲<small>알프스 초원 시골 마을 4.5km 내리막길 라이딩 (그린델발트 하산)</small></span></li>
+        <li><span class="t">16:30</span><span class="what">그린델발트 마을 도착 후 트로티바이크 반납 & 인터라켄 복귀<small>그린델발트에서 기차 탑승</small></span></li>
+        <li><span class="t">18:30</span><span class="what">운터젠 숙소 도착 & 인터라켄 시내 저녁 휴식</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🌧 플랜 B (우천 / 악천후 시 대안) — 베른 (Bern) 당일치기</h3>
+      <ul class="tl">
+        <li><span class="t">오전</span><span class="what">인터라켄 웨스트 역 → 베른 역 (Bern SBB) 이동<small>기차 약 50분 소요 (스위스 패스 무제한)</small></span></li>
+        <li><span class="t">점심</span><span class="what">베른 구시가지 (유네스코 세계유산) & 아케이드 쇼핑<small>6km 연속 지붕 통로로 비 피하기 좋음</small></span></li>
+        <li><span class="t">오후</span><span class="what">시계탑 (Zytglogge) · 곰 공원 (Bärenpark) · 장미 공원 (Rosengarten)<small>장미 공원에서 베른 구시가지 한눈에 전경 감상</small></span></li>
+        <li><span class="t">저녁</span><span class="what">베른 수제 맥주 펍 / 저녁 식사 후 인터라켄 복귀</span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>이날 예약 & 패스 구매 팁</h3>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="dongshin-coupon" checked><label>📄 동신항운 융프라우 할인쿠폰 (신라면 무료 교환권) 한국에서 인쇄/소지</label></li>
+        <li><input type="checkbox" data-key="jungfrau-vip" checked><label>🏔 융프라우 1일 VIP 패스 (당일 아침 날씨 확인 후 그린델발트/인터라켄 역 창구에서 쿠폰 제시 후 현장 구매)</label></li>
+        <li><input type="checkbox" data-key="trottibike-ticket"><label>🚲 피르스트 트로티바이크 (Trottibike 자전거) 보어트 역 현장 티켓 구매/탑승</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 10일차 ============ -->
+  <section class="day" data-day="d10">
+    <div class="card">
+      <h2>10일차 · 9/20 (일) <span class="pill">그린델발트 이동 & 아이거 뷰 숙박</span></h2>
+      <p class="muted" style="margin:0 0 6px">인터라켄 오스트 → 그린델발트 기차 이동 (BOB) → 선스타 호텔 체크인 (16:00) & 핑슈텍 루지</p>
+      <div id="mapD10" class="map"></div>
+    </div>
+    <div class="card">
+      <h3>시간대별 타임라인</h3>
+      <ul class="tl">
+        <li><span class="t">10:30</span><span class="what">운터젠 숙소 체크아웃 & 인터라켄 오스트 역 (Interlaken Ost) 이동</span></li>
+        <li><span class="t">11:02</span><span class="what">인터라켄 오스트 역 출발 (BOB 기차)<small>★ Sector A (그린델발트행) 앞쪽 탑승 필수 · 약 34분 소요</small></span></li>
+        <li><span class="t">11:36</span><span class="what">그린델발트 역 (Grindelwald) 도착 🇨🇭<small>아이거 북벽 병풍 마을 입성</small></span></li>
+        <li><span class="t">11:50</span><span class="what">선스타 호텔 그린델발트 (Sunstar Hotel) 이동 & 짐 보관<small>체크인(16:00) 전 짐 맡기기 (도보 약 5분)</small></span></li>
+        <li><span class="t">12:15</span><span class="what">그린델발트 시내 점심 식사</span></li>
+        <li><span class="t">13:30</span><span class="what">핑슈텍 (Pfingstegg) 케이블카 탑승 & 액티비티 🛷<small>선스타 호텔 도보 5분 · 725m 알프스 토보건(루지) & 플라이라인 숲속 짚라인</small></span></li>
+        <li><span class="t">16:00</span><span class="what">선스타 호텔 체크인 (16:00) & 스파 / 객실 발코니 휴식<small>객실 발코니 아이거 북벽 뷰 감상 🏔</small></span></li>
+        <li><span class="t">18:30</span><span class="what">그린델발트 시내 / 호텔 저녁 식사<small>스위스 스테이크 / 퐁뒤 / 스위스 와인 한 잔 🍷</small></span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🏔 대안 옵션 — 멘리헨 (Männlichen) 파노라마 산책</h3>
+      <ul class="tl">
+        <li><span class="t">대안</span><span class="what">그린델발트 터미널 → 멘리헨 곤돌라 탑승 (약 20분)<small>로열 워크(Royal Walk) 왕관 전망대 산책 · 360도 융프라우 3대 영봉 조망</small></span></li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>이날 예약 항목</h3>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="sunstar-stay" checked><label>선스타 호텔 그린델발트 (Sunstar Hotel) 1박 — 9/20~9/21 (체크인 16:00 / 체크아웃 11:00)</label></li>
+        <li><input type="checkbox" data-key="bob-train" checked><label>인터라켄 오스트 → 그린델발트 BOB 기차 (Sector A 탑승 확인)</label></li>
+        <li><input type="checkbox" data-key="pfingstegg-luge"><label>핑슈텍 케이블카 & 루지 (Toboggan) 현장 티켓 구매</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 11일차 ============ -->
+  <section class="day" data-day="d11">
+    <div class="card">
+      <h2>11일차 · 9/21 (월) <span class="pill">폭포 마을 & 취리히 노을 야경</span></h2>
+      <p class="muted" style="margin:0 0 6px">그린델발트 체크아웃 → 라우터브루넨 폭포 마을 → 취리히 이동 & 린덴호프 노을 야경 디너</p>
+      <div id="mapD11" class="map"></div>
+    </div>
+    <div class="card">
+      <h3>시간대별 타임라인</h3>
+      <ul class="tl">
+        <li><span class="t">09:00~</span><span class="what">선스타 호텔 아이거 뷰 조식 & 11:00 체크아웃</span></li>
+        <li><span class="t">11:15</span><span class="what">그린델발트 출발 → 라우터브루넨 (Lauterbrunnen) 이동<small>기차 약 30분 소요</small></span></li>
+        <li><span class="t">11:45</span><span class="what">라우터브루넨 폭포 마을 탐방 & 슈타우프바흐 폭포 (Staubbach Falls) 📸<small>절벽 수직 폭포 산책 & 동화 마을 점심 식사</small></span></li>
+        <li><span class="t">14:30</span><span class="what">인터라켄 오스트 출발 → 취리히 중앙역 (Zürich HB) 이동<small>SBB 기차 약 2시간 15분 소요</small></span></li>
+        <li><span class="t">17:00</span><span class="what">취리히 숙소 체크인 (MANY'S historical city central APARTMENTS)<small>취리히 중앙역 도보 이동 & 짐 풀기</small></span></li>
+        <li><span class="t">18:00</span><span class="what">린덴호프 (Lindenhof) 언덕 올라가기 📸<small>취리히 구시가지 & 리마트 강 베스트 노을 뷰스팟 (숙소 도보 7분)</small></span></li>
+        <li><span class="t">19:00</span><span class="what">리마트 강변 (Limmatquai) & 세인트 피터 교회 야경 산책</span></li>
+        <li><span class="t">19:40</span><span class="what">취리히 구시가지 디너 & 스위스 와인 한 잔 🍷<small>신혼여행 스위스 마지막 밤 축하 디너</small></span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>이날 예약 항목</h3>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="manys-stay" checked><label>취리히 숙소 1박 (MANY'S historical city central APARTMENTS) — 9/21~9/22 (체크인 14:00 / 체크아웃 11:00)</label></li>
+        <li><input type="checkbox" data-key="zurich-train" checked><label>인터라켄 오스트 → 취리히 중앙역 SBB 기차표 / 스위스 패스</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 12일차 ============ -->
+  <section class="day" data-day="d12">
+    <div class="card">
+      <h2>12일차 · 9/22 (화) <span class="pill">취리히 쇼핑 & 스위스 출국</span></h2>
+      <p class="muted" style="margin:0 0 6px">취리히 쇼핑가 초콜릿 선물 구매 → 취리히 공항 이동 & 19:30 귀국 비행기 탑승</p>
+      <div id="mapD12" class="map"></div>
+    </div>
+    <div class="card">
+      <h3>시간대별 타임라인</h3>
+      <ul class="tl">
+        <li><span class="t">09:00~</span><span class="what">취리히 여유로운 아침 & 11:00 체크아웃</span></li>
+        <li><span class="t">11:00</span><span class="what">취리히 중앙역 (Zürich HB) 이동 & 코인라커 수하물 보관<small>짐 맡기고 가볍게 쇼핑 시작</small></span></li>
+        <li><span class="t">11:30</span><span class="what">반호프슈트라세 (Bahnhofstrasse) 쇼핑가 산책 & 선물 구매 🎁<small>Sprüngli (수프렝글리) / Läderach (레더라) 스위스 명품 초콜릿 선물</small></span></li>
+        <li><span class="t">13:30</span><span class="what">리마트 강변 야외 테라스 점심 식사 & 커피 ☕</span></li>
+        <li><span class="t">15:30</span><span class="what">취리히 중앙역 짐 찾기 후 공항철도 탑승<small>취리히 공항까지 기차 약 12분 소요</small></span></li>
+        <li><span class="t">16:30</span><span class="what">취리히 국제공항 (ZRH) 도착 & 출국 수속 ✈️<small>출발 3시간 전 공항 도착 완료</small></span></li>
+        <li><span class="t">19:30</span><span class="what">스위스 현지 출발 (인천행 비행기 탑승) 🛫<small>귀국 항공편</small></span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>이날 예약 항목</h3>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="swiss-flight-out" checked><label>9/22 19:30 스위스 취리히 출발 귀국 항공권 (16:30 공항 도착 완료)</label></li>
+        <li><input type="checkbox" data-key="zurich-locker"><label>취리히 중앙역 코인라커 이용 (수하물 보관)</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 13일차 ============ -->
+  <section class="day" data-day="d13">
+    <div class="card">
+      <h2>13일차 · 9/23 (수) <span class="pill">인천 도착 (Homecoming)</span></h2>
+      <ul class="tl">
+        <li><span class="t">14:10</span><span class="what">인천 국제공항 (ICN) 도착 🛬<small>입국 심사 및 수하물 수령</small></span></li>
+        <li><span class="t">오후</span><span class="what">귀가 및 신혼여행 무사 마무리 ❤️</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 체크리스트 ============ -->
+  <section class="day" data-day="checklist">
+    <div class="card">
+      <h2>💡 스위스 패스 구매 타이밍 & 가이드</h2>
+      <ul class="tl">
+        <li>
+          <span class="t">스위스 패스</span>
+          <span class="what">
+            <b>스위스 트래블 패스 4일권 (9/18~9/21)</b>
+            <small>
+              • <b>구매 시점</b>: 한국에서 여행 출발 전 (출발 1~2주 전 미리 구매)<br/>
+              • <b>구매처</b>: 마이리얼트립 / 클룩 / 와그 / SBB 공식 앱 (온라인)<br/>
+              • <b>사용 방법</b>: 이메일로 받은 E-티켓(QR코드)을 스마트폰(Apple Wallet / PDF)에 저장 후, 기차/버스 검표원에게 QR코드만 제시하면 100% 무료 무제한 탑승! (현지 창구 방문 불필요)
+            </small>
+          </span>
+        </li>
+        <li>
+          <span class="t">VIP 패스</span>
+          <span class="what">
+            <b>융프라우 1일 VIP 패스 (9/19 당일용)</b>
+            <small>
+              • <b>구매 시점</b>: 9/19 (9일차) 당일 아침 산으로 출발 직전 (정상 날씨 웹캠 확인 후)<br/>
+              • <b>구매처</b>: 그린델발트 터미널 / 그린델발트 역 / 인터라켄 역 티켓 창구 (Ticket Office)<br/>
+              • <b>사용 방법</b>: 한국에서 미리 인쇄한 <b>동신항운 할인쿠폰(종이)</b>을 역 창구에 제출하며 구매 → 실물 티켓과 함께 나오는 <b>신라면 무료 교환권</b> 챙겨서 정상에서 맛있게 냠냠 🍜
+            </small>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>스위스 예약 & 패스 체크리스트</h2>
+      <p class="muted" style="margin:0 0 8px">스위스 일정 추천 패스 조합 및 주요 예약 항목 체크 상태는 자동 저장됩니다.</p>
+      <ul class="checks">
+        <li><input type="checkbox" data-key="swiss-tgv" checked><label>파리 리옹역 → 스위스 바젤 이동 기차표 (TGV Lyria 10:22 예매)</label></li>
+        <li><input type="checkbox" data-key="swiss-pass" checked><label>🎫 스위스 트래블 패스 4일권 (한국에서 출발 전 온라인 미리 구매 · QR코드 저장)</label></li>
+        <li><input type="checkbox" data-key="jungfrau-vip" checked><label>🏔 융프라우 1일 VIP 패스 (9/19 당일 아침 날씨 확인 후 현지 역 창구에서 구매)</label></li>
+        <li><input type="checkbox" data-key="dongshin-coupon" checked><label>📄 동신항운 융프라우 할인쿠폰 (신라면 무료 교환권) 한국에서 미리 인쇄/소지</label></li>
+        <li><input type="checkbox" data-key="unterseen-stay" checked><label>🛏 운터젠 숙소 2박 (Obere Gasse, Unterseen) — 9/18~9/20</label></li>
+        <li><input type="checkbox" data-key="sunstar-stay" checked><label>🛏 선스타 호텔 그린델발트 1박 (Sunstar Hotel) — 9/20~9/21</label></li>
+        <li><input type="checkbox" data-key="manys-stay" checked><label>🛏 취리히 숙소 1박 (MANY'S historical city central APARTMENTS) — 9/21~9/22</label></li>
+        <li><input type="checkbox" data-key="zurich-airport-ticket"><label>🚆 9/22 취리히 중앙역 → 취리히 공항 SBB 편도 기차표 (당일 현장 구매 · 약 CHF 6.8)</label></li>
+        <li><input type="checkbox" data-key="swiss-flight-out" checked><label>✈️ 9/22 19:30 취리히 출발 귀국 항공권 (인천 9/23 14:10 도착)</label></li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>마지막 업데이트 · 2026-07-19 · 모바일에서 ☆ 홈 화면에 추가</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+  // 탭 전환
+  const nav = document.getElementById('dayNav');
+  const sections = document.querySelectorAll('section.day');
+  const LAST_KEY = 'swiss_lastDay', SCROLL_KEY = 'swiss_lastScroll';
+  const safeLS = {
+    get(k){ try{return localStorage.getItem(k);}catch(e){return null;} },
+    set(k,v){ try{localStorage.setItem(k,v);}catch(e){} }
+  };
+  function activateDay(k, restoreScroll){
+    const btn = nav.querySelector('button[data-day="'+k+'"]');
+    if(!btn) return false;
+    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active', x===btn));
+    sections.forEach(s=>s.classList.toggle('active', s.dataset.day===k));
+    safeLS.set(LAST_KEY, k);
+    setTimeout(()=>{
+      Object.values(maps).forEach(m=>{
+        if(!m) return;
+        m.invalidateSize();
+        if(m._fitBounds){ m.fitBounds(m._fitBounds, {padding:[20,20]}); }
+      });
+      if(restoreScroll){
+        const y = parseInt(safeLS.get(SCROLL_KEY+'_'+k)||'0',10);
+        window.scrollTo({top:y, behavior:'instant'});
+      } else {
+        window.scrollTo({top:0, behavior:'instant'});
+      }
+    }, 60);
+    return true;
+  }
+  nav.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    activateDay(b.dataset.day, false);
+  });
+
+  // 스크롤 위치 저장
+  let scrollSaveTimer = null;
+  window.addEventListener('scroll', ()=>{
+    clearTimeout(scrollSaveTimer);
+    scrollSaveTimer = setTimeout(()=>{
+      const cur = safeLS.get(LAST_KEY);
+      if(cur) safeLS.set(SCROLL_KEY+'_'+cur, String(window.scrollY||0));
+    }, 150);
+  }, {passive:true});
+
+  // 체크리스트 저장
+  function syncCheck(cb){
+    const k = 'chk_'+(cb.dataset.key || cb.id);
+    cb.parentElement.classList.toggle('done', cb.checked);
+    document.querySelectorAll('input[type=checkbox]').forEach(o=>{
+      const ok = 'chk_'+(o.dataset.key || o.id);
+      if(o!==cb && ok===k){ o.checked=cb.checked; o.parentElement.classList.toggle('done',cb.checked); }
+    });
+    safeLS.set(k, cb.checked?'1':'0');
+  }
+  document.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    const k = 'chk_'+(cb.dataset.key || cb.id);
+    const saved = safeLS.get(k);
+    if(saved!==null) cb.checked = saved==='1';
+    cb.parentElement.classList.toggle('done', cb.checked);
+    cb.addEventListener('change', ()=>syncCheck(cb));
+  });
+
+  // 핀 데이터
+  const PINS = {
+    basel:          {ll:[47.5474, 7.5896], name:'바젤 역 (Basel SBB)', day:'8'},
+    unterseen:     {ll:[46.6865, 7.8502], name:'운터젠 숙소 (Obere Gasse, Unterseen, Bern 3800)', day:'8/9/10'},
+    interlakenwest:{ll:[46.6834, 7.8517], name:'인터라켄 웨스트 역 (Interlaken West)', day:'8'},
+    interlakenost: {ll:[46.6904, 7.8693], name:'인터라켄 오스트 역 (Interlaken Ost)', day:'8'},
+    iseltwald:     {ll:[46.7118, 7.9620], name:'이젤트발트 / 브리엔츠 호수 (Iseltwald · Lake Brienz)', day:'8'},
+    grindelwald:   {ll:[46.6242, 8.0414], name:'그린델발트 터미널 (Grindelwald Terminal)', day:'9'},
+    grindelwaldstn:{ll:[46.6247, 8.0340], name:'그린델발트 역 (Grindelwald Station)', day:'10'},
+    sunstar:       {ll:[46.6238, 8.0417], name:'선스타 호텔 그린델발트 (Sunstar Hotel Grindelwald)', day:'10/11'},
+    pfingstegg:    {ll:[46.6230, 8.0565], name:'핑슈텍 루지 (Pfingstegg Toboggan)', day:'10'},
+    maennlichen:   {ll:[46.6136, 7.9427], name:'멘리헨 (Männlichen)', day:'10'},
+    jungfraujoch:  {ll:[46.5475, 7.9824], name:'융프라우요흐 (Jungfraujoch Top of Europe)', day:'9'},
+    first:         {ll:[46.6586, 8.0560], name:'피르스트 (First)', day:'9'},
+    bort:          {ll:[46.6430, 8.0470], name:'보어트 역 (Bort Station)', day:'9'},
+    bern:          {ll:[46.9480, 7.4474], name:'베른 구시가지 (Bern Old Town)', day:'9'},
+    lauterbrunnen: {ll:[46.5935, 7.9077], name:'라우터브루넨 (Lauterbrunnen)', day:'11'},
+    staubbach:     {ll:[46.5912, 7.9065], name:'슈타우프바흐 폭포 (Staubbach Falls)', day:'11'},
+    zurichhb:      {ll:[47.3779, 8.5403], name:'취리히 중앙역 (Zürich HB)', day:'11/12'},
+    manys:         {ll:[47.3833, 8.5417], name:'MANY’S historical city central APARTMENTS', day:'11/12'},
+    lindenhof:     {ll:[47.3725, 8.5403], name:'린덴호프 언덕 (Lindenhof)', day:'11'},
+    limmat:        {ll:[47.3705, 8.5427], name:'리마트 강변 (Limmatquai)', day:'11/12'},
+    bahnhofstrasse:{ll:[47.3732, 8.5385], name:'반호프슈트라세 쇼핑가 (Bahnhofstrasse)', day:'12'},
+    zrh:           {ll:[47.4582, 8.5555], name:'취리히 국제공항 (Zürich Airport)', day:'12'},
+    icn:           {ll:[37.4602, 126.4407], name:'인천 국제공항 (ICN)', day:'13'},
+  };
+
+  const maps = {};
+
+  function gmapsLink(p){
+    return 'https://www.google.com/maps/search/?api=1&query=' + p.ll[0]+','+p.ll[1];
+  }
+
+  function gmapsDir(keys){
+    const pts = keys.map(k=>PINS[k]).filter(Boolean);
+    if(pts.length<1) return null;
+    const startPin = pts[0];
+    const restPts = pts.slice(1);
+    if(restPts.length<1) return gmapsLink(startPin);
+    const o = startPin.ll.join(',');
+    const d = restPts[restPts.length-1].ll.join(',');
+    const wp = restPts.slice(0,-1).map(p=>p.ll.join(',')).join('|');
+    return 'https://www.google.com/maps/dir/?api=1'
+      +'&origin='+encodeURIComponent(o)
+      +'&destination='+encodeURIComponent(d)
+      +(wp?'&waypoints='+encodeURIComponent(wp):'');
+  }
+
+  function linkifyTimelines(){
+    const norm = s => (s||'').replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
+    const entries = Object.values(PINS).map(p=>{
+      const aliases = new Set();
+      aliases.add(norm(p.name));
+      const head = p.name.split(' (')[0].trim();
+      if(head) aliases.add(head);
+      if(p.name.includes(' — ')){
+        p.name.split(' — ').forEach(part=>{
+          const n = norm(part); if(n) aliases.add(n);
+          const h = part.split(' (')[0].trim(); if(h) aliases.add(h);
+        });
+      }
+      const m = p.name.match(/\(([^)]+)\)/);
+      if(m) aliases.add(m[1].trim());
+      return {p, aliases:[...aliases].filter(s=>s && s.length>=2)};
+    });
+    entries.sort((a,b)=>{
+      const al = Math.max(...a.aliases.map(s=>s.length));
+      const bl = Math.max(...b.aliases.map(s=>s.length));
+      return bl-al;
+    });
+    function matchAllPins(text){
+      const found = []; const seen = new Set();
+      const tryAdd = p => { if(p && !seen.has(p)){ seen.add(p); found.push(p);} };
+      let work = text;
+      for(const {p, aliases} of entries){
+        for(const a of aliases){
+          if(work.includes(a)){
+            tryAdd(p);
+            work = work.split(a).join(' '.repeat(a.length));
+            break;
+          }
+        }
+      }
+      return found;
+    }
+
+    function appendLink(el, href, icon, title){
+      const a = document.createElement('a');
+      a.className = 'pin-link';
+      a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.title = title; a.textContent = icon;
+      a.style.cssText = 'margin-left:6px; text-decoration:none; font-size:13px;';
+      const small = el.querySelector('small');
+      if(small) el.insertBefore(a, small);
+      else el.appendChild(a);
+    }
+
+    document.querySelectorAll('ul.tl li .what').forEach(el=>{
+      if(el.querySelector('a.pin-link')) return;
+      let mainText = '';
+      el.childNodes.forEach(n=>{
+        if(n.nodeType===3) mainText += n.textContent;
+        else if(n.nodeName!=='SMALL') mainText += n.textContent;
+      });
+      const found = matchAllPins(mainText);
+      found.forEach(p=>{
+        appendLink(el, gmapsLink(p), '📍', p.name + ' — 구글맵에서 열기');
+      });
+    });
+  }
+
+  function makeMap(id, center, zoom, keys, fitAll){
+    const el = document.getElementById(id); if(!el) return;
+    const m = L.map(el, {scrollWheelZoom:false}).setView(center, zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+      maxZoom:19, attribution:'© OpenStreetMap'
+    }).addTo(m);
+    const grp = [];
+    keys.forEach(k=>{
+      const p = PINS[k]; if(!p) return;
+      const popup =
+        '<b>'+p.name+'</b><br/>'
+        +'<span style="color:#6b6f76;font-size:12px">Day '+p.day+'</span><br/>'
+        +'<a href="'+gmapsLink(p)+'" target="_blank" '
+        +'style="display:inline-block;margin-top:6px;padding:5px 9px;'
+        +'background:#b91c1c;color:#fff;border-radius:6px;font-weight:600;">'
+        +'🗺 구글맵에서 열기</a>';
+      const mk = L.marker(p.ll).addTo(m).bindPopup(popup);
+      grp.push(mk);
+    });
+    if(fitAll && grp.length>=1){
+      const fg = L.featureGroup(grp);
+      const bounds = fg.getBounds();
+      m._fitBounds = bounds;
+      m.fitBounds(bounds, {padding:[20,20], maxZoom:15});
+    }
+    maps[id]=m;
+
+    // 지도 우상단 구글맵 동선 버튼
+    const dirUrl = gmapsDir(keys);
+    if(dirUrl){
+      const btn = L.control({position:'topright'});
+      btn.onAdd = ()=>{
+        const div = L.DomUtil.create('div');
+        div.innerHTML = '<a href="'+dirUrl+'" target="_blank" '
+          +'style="background:#fff;border:1px solid #d0d0d0;border-radius:8px;'
+          +'padding:6px 10px;font-size:12px;font-weight:700;color:#b91c1c;'
+          +'box-shadow:0 1px 3px rgba(0,0,0,.15);text-decoration:none;">'
+          +'🗺 구글맵 동선</a>';
+        L.DomEvent.disableClickPropagation(div);
+        return div;
+      };
+      btn.addTo(m);
+    }
+
+    return m;
+  }
+
+  // 전체 지도
+  makeMap('mapAll',[46.8, 8.2], 8, ['basel','unterseen','jungfraujoch','first','sunstar','manys','zrh'], true);
+  makeMap('mapD8',[47.1, 7.7], 10, ['basel','interlakenwest','unterseen','interlakenost','iseltwald'], true);
+  makeMap('mapD9',[46.6, 8.0], 11, ['unterseen','grindelwald','jungfraujoch','first','bort'], true);
+  makeMap('mapD10',[46.624, 8.042], 14, ['grindelwaldstn','sunstar','pfingstegg'], true);
+  makeMap('mapD11',[46.9, 8.2], 9, ['grindelwald','lauterbrunnen','zurichhb','manys','lindenhof'], true);
+  makeMap('mapD12',[47.4, 8.54], 12, ['manys','zurichhb','bahnhofstrasse','limmat','zrh'], true);
+
+  linkifyTimelines();
+
+  // 마지막 본 탭 복원
+  const savedDay = safeLS.get(LAST_KEY);
+  if(savedDay && nav.querySelector('button[data-day="'+savedDay+'"]')){
+    activateDay(savedDay, true);
+  }
+</script>
+</body>
+</html>

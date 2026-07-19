@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="허니문 일정" />
+<meta name="format-detection" content="telephone=no, address=no, email=no" />
+<title>신혼여행 삼국 통합 일정표 (영국 · 파리 · 스위스) · 2026.09</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{
+    --bg:#fafaf7; --card:#ffffff; --ink:#1f2024; --muted:#6b6f76;
+    --line:#e8e6df; --accent:#b91c1c; --accent-soft:#fee2e2; --ok:#15803d;
+    --pin:#1d4ed8;
+    color-scheme: light;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",system-ui,sans-serif;
+    font-size:15px; line-height:1.55; -webkit-text-size-adjust:100%;}
+  a{color:var(--accent); text-decoration:none}
+  a:active{opacity:.6}
+  
+  /* iOS 터치 터치 지연 방지 & 터치 인터랙션 강화 */
+  button, label, input[type=checkbox], a.btn, nav.trip button, nav.days button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .wrap{max-width:680px; margin:0 auto; padding:14px 14px 80px;}
+
+  /* 최상단 국가 선택 네비 */
+  nav.trip{display:flex; gap:6px; margin-bottom:12px}
+  nav.trip button{
+    flex:1; text-align:center; padding:10px 10px; border:1px solid var(--line);
+    background:#fff; border-radius:10px; font-size:13.5px; font-weight:700; color:var(--ink);
+    cursor:pointer; transition:all 0.15s ease;
+  }
+  nav.trip button.cur{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  header.hero{
+    color:#fff; border-radius:18px; padding:20px; margin-bottom:14px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+  }
+  header.hero.uk-hero{ background:linear-gradient(135deg,#1f2937,#111827); }
+  header.hero.paris-hero{ background:linear-gradient(135deg,#7c2d12,#1f2937); }
+  header.hero.swiss-hero{ background:linear-gradient(135deg,#991b1b,#1e293b); }
+
+  header.hero h1{margin:0 0 4px; font-size:22px; letter-spacing:-0.01em}
+  header.hero .sub{opacity:.85; font-size:13px}
+  header.hero .meta{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; font-size:12.5px}
+  header.hero .meta span{background:rgba(255,255,255,.12); padding:5px 9px; border-radius:999px}
+
+  nav.days{
+    position:sticky; top:0; z-index:50;
+    background:var(--bg); padding:8px 0; margin:-4px -2px 10px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    display:flex; gap:6px;
+    border-bottom:1px solid var(--line);
+  }
+  nav.days::-webkit-scrollbar{display:none}
+  nav.days button{
+    flex:0 0 auto; border:1px solid var(--line); background:#fff;
+    padding:8px 12px; border-radius:999px; font-size:13px; color:var(--ink);
+    font-weight:600; cursor:pointer;
+  }
+  nav.days button.active{background:var(--ink); color:#fff; border-color:var(--ink)}
+
+  .country-block{display:none}
+  .country-block.active{display:block}
+
+  section.day{display:none}
+  section.day.active{display:block}
+
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:14px; margin-bottom:12px;
+  }
+  .card h2{margin:0 0 8px; font-size:17px; letter-spacing:-0.01em}
+  .card h3{margin:14px 0 6px; font-size:14px; color:var(--muted); font-weight:600;
+    text-transform:uppercase; letter-spacing:.04em;}
+
+  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent);
+    padding:3px 8px; border-radius:999px; font-size:12px; font-weight:600;
+    margin-right:6px;}
+  .muted{color:var(--muted)}
+
+  ul.tl{list-style:none; padding:0; margin:0}
+  ul.tl li{
+    display:grid; grid-template-columns:54px 1fr; gap:10px;
+    padding:8px 0; border-top:1px dashed var(--line);
+  }
+  ul.tl li:first-child{border-top:0}
+  ul.tl .t{font-variant-numeric:tabular-nums; color:var(--accent); font-weight:700; font-size:13.5px}
+  ul.tl .what{font-size:14.5px}
+  ul.tl .what small{display:block; color:var(--muted); font-size:12.5px; margin-top:2px}
+
+  .map{height:280px; border-radius:12px; overflow:hidden; border:1px solid var(--line)}
+  .map.big{height:360px}
+
+  .checks{padding:0; margin:0; list-style:none}
+  .checks li{
+    display:flex; gap:10px; align-items:flex-start;
+    padding:8px 0; border-top:1px solid var(--line);
+  }
+  .checks li:first-child{border-top:0}
+  .checks input[type=checkbox]{
+    appearance:none; -webkit-appearance:none; width:20px; height:20px;
+    border:2px solid #c8cad0; border-radius:6px; flex:0 0 20px; margin-top:2px;
+    background:#fff; cursor:pointer;
+  }
+  .checks input[type=checkbox]:checked{
+    background:var(--ok); border-color:var(--ok);
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3 3 7-7'/></svg>");
+    background-size:16px; background-repeat:no-repeat; background-position:center;
+  }
+  .checks label{flex:1; font-size:14.5px; cursor:pointer;}
+  .checks li.done label{color:var(--muted); text-decoration:line-through}
+
+  details{border:1px solid var(--line); border-radius:12px; padding:10px 12px; background:#fff; margin-bottom:8px}
+  details summary{cursor:pointer; font-weight:600; outline:none; list-style:none}
+  details summary::-webkit-details-marker{display:none}
+  details[open] summary{margin-bottom:6px}
+
+  .row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .row a.btn{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--line); background:#fff; color:var(--ink);
+    padding:7px 11px; border-radius:999px; font-size:13px; font-weight:600;
+    text-decoration:none;
+  }
+  .row a.btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+
+  .note{background:#fff8ee; border:1px solid #f3d8a6; color:#7a4a00;
+    padding:10px 12px; border-radius:10px; font-size:13.5px}
+
+  footer{color:var(--muted); font-size:12px; text-align:center; padding:18px 0 0}
+
+  .leaflet-popup-content{margin:8px 12px; font-size:13px}
+  .leaflet-popup-content b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 최상단 국가 셀렉터 -->
+  <nav class="trip" id="tripNav">
+    <button type="button" data-c="uk" class="cur">🇬🇧 영국</button>
+    <button type="button" data-c="paris">🇫🇷 파리</button>
+    <button type="button" data-c="swiss">🇨🇭 스위스</button>
+  </nav>
+
+  <!-- ================================================================= -->
+  <!-- 1. 영국 (UK) BLOCK — honeymoon.html 원본 내용 100% 무손실 이관 -->
+  <!-- ================================================================= -->
+  <div id="c-uk" class="country-block active">
+    <header class="hero uk-hero">
+      <div class="sub">허니문 · 영국 (UK) & 프랑스 (FR)</div>
+      <h1>런던 · 파리 허니문</h1>
+      <div class="sub">2026.09.10 (목) → 2026.09.15 (화) · 5박</div>
+      <div class="meta">
+        <span>👫 성인 2명 (2 adults)</span>
+        <span>🛏 소호 에어비앤비 (Soho Airbnb) · 4박</span>
+        <span>🚄 유로스타 (Eurostar) 9/15</span>
+        <span>📷 스냅 35만</span>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://www.airbnb.co.kr/rooms/5304993?adults=2&check_in=2026-09-10&check_out=2026-09-14" target="_blank">소호 숙소 (Airbnb)</a>
+        <a class="btn" href="https://www.airbnb.co.kr/trips/v1/reservation-details/ro/RESERVATION2_CHECKIN/HMJNDQRQSC" target="_blank">파리 숙소 (Airbnb)</a>
+        <a class="btn" href="https://maps.app.goo.gl/HgzY8MYKiXMj9bEU8" target="_blank">전체 구글지도 (Google Maps)</a>
+        <a class="btn" href="https://www.stubbyplanner.com/guide/detail.asp?serial=1140" target="_blank">스냅 35만 (Stubby)</a>
+      </div>
+    </header>
+
+    <nav class="days" id="daysNav-uk">
+      <button type="button" data-d="uk-overview" class="active">개요</button>
+      <button type="button" data-d="uk-d0">0일 9/10</button>
+      <button type="button" data-d="uk-d1">1일 9/11</button>
+      <button type="button" data-d="uk-d2">2일 9/12</button>
+      <button type="button" data-d="uk-d3">3일 9/13</button>
+      <button type="button" data-d="uk-d4">4일 9/14</button>
+      <button type="button" data-d="uk-d5">5일 9/15</button>
+      <button type="button" data-d="uk-chk">체크</button>
+    </nav>
+
+    <!-- 영국 개요 -->
+    <section class="day active" id="uk-overview">
+      <div class="card">
+        <h2>전체 동선</h2>
+        <div id="mapUK-All" class="map big"></div>
+        <p class="muted" style="margin:8px 0 0; font-size:12.5px">핀을 탭하면 일정·링크가 표시됩니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>여행 한눈에</h2>
+        <ul class="tl">
+          <li><span class="t">9/10 목</span><span class="what">인천 10:55 → 히스로 (Heathrow) 17:20 · 소호 체크인<small>0일차</small></span></li>
+          <li><span class="t">9/11 금</span><span class="what">런던 핵심 랜드마크 — 시계방향 도보 동선<small>1일차</small></span></li>
+          <li><span class="t">9/12 토</span><span class="what">노팅힐 (Notting Hill) · 포토벨로 마켓 · 코벤트 가든<small>2일차</small></span></li>
+          <li><span class="t">9/13 일</span><span class="what">옥스퍼드 (Oxford) 당일치기<small>3일차</small></span></li>
+          <li><span class="t">9/14 월</span><span class="what">소호 근교 마무리 — 보로우·런던탑·캠든<small>4일차</small></span></li>
+          <li><span class="t">9/15 화</span><span class="what">유로스타 (Eurostar) 13:31 → 파리 16:59<small>5일차</small></span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>현지 팁</h2>
+        <details open>
+          <summary>🍺 캄라 (CAMRA) 펍 — 리얼 에일</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            ‘캄라 (CAMRA)’ 표시가 붙은 펍에서 캐스크 에일 (Cask Ale)을 마셔볼 것. 자연 탄산이라 살짝 밍밍하지만 ‘살아있는’ 영국식 맥주.
+            인기 통은 빨리 떨어지니 너무 늦게 가지 말 것.
+          </p>
+        </details>
+        <details>
+          <summary>🔌 어댑터 · 이심 (eSIM) · 환전</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            BF타입 멀티어댑터, 이심 (Airalo), 트래블월렛 / 트래블로그.
+          </p>
+        </details>
+        <details>
+          <summary>🛂 영국 전자여행허가 (ETA)</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            출국 최소 3영업일 전. 미리 신청 권장.
+            <a href="https://www.gov.uk/guidance/apply-for-an-electronic-travel-authorisation-eta" target="_blank">신청 링크</a>
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 영국 0일차 -->
+    <section class="day" id="uk-d0">
+      <div class="card">
+        <h2>0일차 · 9/10 (목) <span class="pill">이동</span></h2>
+        <ul class="tl">
+          <li><span class="t">10:55</span><span class="what">인천공항 출발</span></li>
+          <li><span class="t">17:20</span><span class="what">히스로 공항 (Heathrow) 도착<small>입국심사 + 짐찾기 30~60분 예상</small></span></li>
+          <li><span class="t">19:30~</span><span class="what">소호 (Soho) 숙소 체크인<small>피커딜리 라인 (Piccadilly Line) 또는 히스로 익스프레스 (Heathrow Express)</small></span></li>
+          <li><span class="t">밤</span><span class="what">근처 펍 (Pub) 가볍게<small>시차 적응용</small></span></li>
+        </ul>
+        <div class="row">
+          <a class="btn primary" href="https://www.airbnb.co.kr/rooms/5304993?adults=2&check_in=2026-09-10&check_out=2026-09-14" target="_blank">숙소 정보 (Airbnb)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="eta"><label>영국 전자여행허가 (ETA) 신청 — 출국 3영업일 전</label></li>
+          <li><input type="checkbox" data-key="esim"><label>이심 (eSIM, Airalo)</label></li>
+          <li><input type="checkbox" data-key="adapter"><label>멀티어댑터 (BF타입)</label></li>
+          <li><input type="checkbox" data-key="cash"><label>환전 (트래블월렛 / 트래블로그)</label></li>
+          <li><input type="checkbox" data-key="insurance"><label>여행자보험 (Travel Insurance)</label></li>
+          <li><input type="checkbox" data-key="airbnb" checked><label>소호 숙소 4박 (확정)</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 영국 1일차 -->
+    <section class="day" id="uk-d1">
+      <div class="card">
+        <h2>1일차 · 9/11 (금) <span class="pill">런던 핵심 (London Core)</span></h2>
+        <p class="muted" style="margin:0 0 6px">시계방향 도보 동선. 총 약 6~7km.</p>
+        <div id="mapUK-D1" class="map"></div>
+        <div class="row">
+          <a class="btn" href="https://maps.app.goo.gl/A3YUTMBqRXmPoMmB7" target="_blank">구글지도 동선 (Google Maps)</a>
+          <a class="btn" href="https://changing-guard.com" target="_blank">근위병 교대식 (Changing the Guard)</a>
+          <a class="btn" href="https://www.theviewfromtheshard.com" target="_blank">더 샤드 예약 (The Shard)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:30</span><span class="what">숙소 → 트라팔가 광장 (Trafalgar Square)</span></li>
+          <li><span class="t">10:30</span><span class="what">더 몰 (The Mall) 산책 → 버킹엄 궁전 (Buckingham Palace)</span></li>
+          <li><span class="t">11:00</span><span class="what">근위병 교대식 (Changing the Guard)<small>9월 격일 — 당일 캘린더 재확인</small></span></li>
+          <li><span class="t">12:00</span><span class="what">세인트제임스 파크 (St James’s Park) → 빅벤 (Big Ben)</span></li>
+          <li><span class="t">13:00</span><span class="what">점심 — 웨스트민스터 (Westminster) 인근</span></li>
+          <li><span class="t">14:00</span><span class="what">웨스트민스터 사원 (Westminster Abbey) 내부<small>약 1.5h</small></span></li>
+          <li><span class="t">15:30</span><span class="what">런던아이 (London Eye) — 탑승 또는 외관</span></li>
+          <li><span class="t">16:30</span><span class="what">사우스뱅크 (Southbank) 강변 → 밀레니엄 브리지 (Millennium Bridge)</span></li>
+          <li><span class="t">17:30</span><span class="what">세인트폴 대성당 (St Paul’s) 외관<small>돔 전망대 16:00 마감</small></span></li>
+          <li><span class="t">18:30</span><span class="what">더 샤드 (The Shard) — 노을 + 와인 🍷</span></li>
+          <li><span class="t">21:00</span><span class="what">숙소 복귀</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="shard"><label>더 샤드 (The Shard) 입장권 — 노을 시간대</label></li>
+          <li><input type="checkbox" data-key="guard"><label>근위병 교대식 (Changing the Guard) 일정 재확인 — 격일</label></li>
+          <li><input type="checkbox" data-key="westminster"><label>웨스트민스터 사원 (Westminster Abbey) 입장권 — 선택</label></li>
+          <li><input type="checkbox" data-key="eye"><label>런던아이 (London Eye) 탑승 여부 결정</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 영국 2일차 -->
+    <section class="day" id="uk-d2">
+      <div class="card">
+        <h2>2일차 · 9/12 (토) <span class="pill">노팅힐 · 코벤트 가든 (Notting Hill · Covent Garden)</span></h2>
+        <p class="muted" style="margin:0 0 6px">토요일 = 포토벨로 마켓 (Portobello Road Market) 풀 운영일. 신혼 사진 스팟 + 도시 감성.</p>
+        <div id="mapUK-D2" class="map"></div>
+        <div class="row">
+          <a class="btn" href="https://maps.app.goo.gl/83MQfMLbabLVqHsT6" target="_blank">구글지도 동선 (Google Maps)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>둘러보기</h3>
+        <ul class="tl">
+          <li><span class="t">09:30</span><span class="what">소호 → 노팅힐 (Notting Hill)<small>지하철 (Tube) Central Line 약 15분</small></span></li>
+          <li><span class="t">10:00</span><span class="what">노팅힐 파스텔 골목 사진 스팟<small>스냅 촬영 후보지 — 토요일 오전이 빛 좋음</small></span></li>
+          <li><span class="t">11:30</span><span class="what">포토벨로 로드 마켓 (Portobello Road Market)<small>토요일 메인 마켓 — 빈티지 · 앤틱 · 푸드</small></span></li>
+          <li><span class="t">13:00</span><span class="what">노팅힐 점심 (브런치 / 펍 추천)</span></li>
+          <li><span class="t">14:30</span><span class="what">소호 (Soho) 복귀 → 코벤트 가든 (Covent Garden)<small>닐스 야드 (Neal’s Yard), 세븐 다이얼스 (Seven Dials)</small></span></li>
+          <li><span class="t">16:00</span><span class="what">옥스포드 서커스 (Oxford Circus) / 리젠트 스트리트 (Regent Street) 쇼핑</span></li>
+          <li><span class="t">18:00</span><span class="what">소호 저녁 — 차이나타운 (Chinatown) / 카르나비 (Carnaby) 거리</span></li>
+          <li><span class="t">21:00</span><span class="what">소호 캄라 (CAMRA) 펍 한 잔 → 숙소</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="snap-spot"><label>노팅힐 스냅 촬영 스팟 픽 (파스텔 골목)</label></li>
+          <li><input type="checkbox" data-key="soho-dinner"><label>소호 저녁 식당 후보 정하기</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 영국 3일차 (옥스퍼드) -->
+    <section class="day" id="uk-d3">
+      <div class="card">
+        <h2>3일차 · 9/13 (일) <span class="pill">옥스퍼드 (Oxford)</span></h2>
+        <p class="muted" style="margin:0 0 6px">패딩턴 (Paddington) → 옥스퍼드 · 트립닷컴 예약 완료 (기차 약 1시간)</p>
+        <div id="mapUK-D3" class="map"></div>
+        <div class="row">
+          <a class="btn primary" href="https://www.trip.com" target="_blank">기차표 (Trip.com)</a>
+          <a class="btn" href="https://www.chch.ox.ac.uk/" target="_blank">크라이스트 처치 (Christ Church)</a>
+          <a class="btn" href="https://visit.bodleian.ox.ac.uk" target="_blank">보들리언 도서관 (Bodleian)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>시간대별 타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:38</span><span class="what">런던 패딩턴 출발<small>트립닷컴 예약 기차 탑승 (10:45 옥스퍼드 도착)</small></span></li>
+          <li><span class="t">10:45</span><span class="what">옥스퍼드역 도착 & 이동<small>시내 도보 이동 (약 15분)</small></span></li>
+          <li><span class="t">11:30</span><span class="what"><a href="https://www.chch.ox.ac.uk/" target="_blank" style="color:inherit;text-decoration:underline;">크라이스트 처치 칼리지 (Christ Church)</a><small>해리포터 대연회장 식당 — 11:30 타임슬롯 예약 필수</small></span></li>
+          <li><span class="t">12:30</span><span class="what">점심: 커버드 마켓 (Covered Market)<small>점심 (파이/태국식 등) + 벤스 쿠키 본점</small></span></li>
+          <li><span class="t">13:30</span><span class="what">래드클리프 카메라 & 보들리언 도서관 (Bodleian Library)<small>디바이니티 스쿨 (Divinity School) = 해리포터 의무실</small></span></li>
+          <li><span class="t">14:15</span><span class="what">세인트메리 교회 (St Mary the Virgin) 타워 전망대<small>래드클리프 카메라 내려다보는 베스트 뷰스팟 📸</small></span></li>
+          <li><span class="t">14:45</span><span class="what">탄식의 다리 (Bridge of Sighs) & 블랙웰 서점<small>포토존 사진 촬영 & 서점 탐방</small></span></li>
+          <li><span class="t">15:30</span><span class="what">모들린 브리지 펀팅 (Punting) 🛶<small>1시간 둘만의 로맨틱 강변 산책 (사공 펀팅 추천)</small></span></li>
+          <li><span class="t">16:45</span><span class="what">터프 태번 (The Turf Tavern) — 한 잔 🍺<small>13세기 골목 끝 숨은 역사적 펍</small></span></li>
+          <li><span class="t">17:45</span><span class="what">옥스퍼드역 이동<small>도보 이동 (약 20분 소요)</small></span></li>
+          <li><span class="t">18:29</span><span class="what">옥스퍼드 출발 → 19:29 패딩턴 도착<small>트립닷컴 예약 기차 탑승 복귀</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>여유 있을 때 추가 (시간 보고 픽)</h3>
+        <ul class="tl">
+          <li><span class="t">·</span><span class="what">뉴 칼리지 (New College)<small>해리포터 4편 안뜰 촬영지</small></span></li>
+          <li><span class="t">·</span><span class="what">트리니티 칼리지 (Trinity College) — 정원 산책</span></li>
+          <li><span class="t">·</span><span class="what">애시몰리언 박물관 (Ashmolean Museum)<small>무료, 비 오면 추천</small></span></li>
+          <li><span class="t">·</span><span class="what">자연사 박물관 + 피트 리버스 (Pitt Rivers Museum)<small>무료, 인디아나존스 분위기</small></span></li>
+          <li><span class="t">·</span><span class="what">블랙웰 서점 (Blackwell’s Bookshop) — 노리턴 룸<small>세계 최대 단일 서점 공간</small></span></li>
+          <li><span class="t">·</span><span class="what">포트 메도우 (Port Meadow) — 강가 초원 산책</span></li>
+          <li><span class="t">·</span><span class="what">블레넘 궁전 (Blenheim Palace) — 처칠 생가<small>버스 30분, 반나절 코스 (시간 매우 여유 있을 때만)</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="ox-train" checked><label>옥스퍼드 왕복 기차표 — 트립닷컴 예약 완료 (09:38 패딩턴 → 10:45 / 18:29 옥스퍼드 → 19:29)</label></li>
+          <li><input type="checkbox" data-key="christchurch"><label>크라이스트 처치 칼리지 (Christ Church) 입장권 — 11:30 타임슬롯 사전예약 필수</label></li>
+          <li><input type="checkbox" data-key="punting"><label>모들린 브리지 펀팅 (Punting) — 사전 예약 권장</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 영국 4일차 -->
+    <section class="day" id="uk-d4">
+      <div class="card">
+        <h2>4일차 · 9/14 (월) <span class="pill">소호 근교 마무리 (London East · Soho)</span></h2>
+        <p class="muted" style="margin:0 0 6px">기차 안 타고 도심 위주. 다음날 유로스타 (Eurostar)니까 체력 보존 + 짐 쌀 시간 확보.</p>
+        <div id="mapUK-D4" class="map"></div>
+        <div class="row">
+          <a class="btn" href="https://www.hrp.org.uk/tower-of-london" target="_blank">런던탑 (Tower of London)</a>
+          <a class="btn" href="https://boroughmarket.org.uk" target="_blank">버로우 마켓 (Borough Market)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">10:00</span><span class="what">늦은 출발 (체력 회복) → 지하철로 런던 브리지 (London Bridge) 이동</span></li>
+          <li><span class="t">10:30</span><span class="what">버로우 마켓 (Borough Market) — 브런치 + 푸드 투어<small>월요일은 일부 가게 미오픈, 핵심 가게는 영업</small></span></li>
+          <li><span class="t">12:30</span><span class="what">템스 강변 산책 → 타워 브리지 (Tower Bridge)</span></li>
+          <li><span class="t">13:30</span><span class="what">런던탑 (Tower of London) 관람<small>약 2~2.5시간 — 왕관 보석 (Crown Jewels) 필수</small></span></li>
+          <li><span class="t">16:00</span><span class="what">소호 (Soho) 복귀 → 잠깐 휴식 + 짐 정리 시작</span></li>
+          <li><span class="t">18:00</span><span class="what">캠든 마켓 (Camden Market) — 저녁 + 라이브 펍<small>스트릿푸드 + 캠든 록 (Camden Lock)</small></span></li>
+          <li><span class="t">21:30</span><span class="what">소호 복귀 → 짐 마무리 (유로스타 대비)</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>대안</h3>
+        <ul class="tl">
+          <li><span class="t">A안</span><span class="what">대영박물관 (British Museum) — 무료, 비 오면 추천<small>버로우 마켓 대신 오전에</small></span></li>
+          <li><span class="t">B안</span><span class="what">윈저성 (Windsor Castle) — 1시간 거리, 반나절 코스<small>근교 한 번 더 가고 싶을 때</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="tower"><label>런던탑 (Tower of London) 입장권</label></li>
+          <li><input type="checkbox" data-key="towerbridge"><label>타워 브리지 글래스 워크 (Tower Bridge Glass Walk) — 선택</label></li>
+          <li><input type="checkbox" data-key="camra"><label>캄라 (CAMRA) 펍 후보 픽 — 캠든</label></li>
+          <li><input type="checkbox" data-key="camden-dinner"><label>캠든 (Camden) 저녁 식당 후보 정하기</label></li>
+          <li><input type="checkbox" data-key="pack"><label>짐 정리 — 유로스타 수하물 규정 확인</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 영국 5일차 (유로스타 이동) -->
+    <section class="day" id="uk-d5">
+      <div class="card">
+        <h2>5일차 · 9/15 (화) <span class="pill">유로스타 (Eurostar)</span></h2>
+        <ul class="tl">
+          <li><span class="t">12:00</span><span class="what">숙소 → 세인트 판크라스 역 (St Pancras International)<small>택시 12분 / 도보 25분</small></span></li>
+          <li><span class="t">12:15</span><span class="what">세인트 판크라스 도착 — 체크인<small>출발 60~75분 전</small></span></li>
+          <li><span class="t">13:31</span><span class="what">유로스타 (Eurostar) 출발 — 런던 세인트 판크라스 (London St Pancras Intl)</span></li>
+          <li><span class="t">16:59</span><span class="what">파리 북역 (Paris Gare du Nord) 도착</span></li>
+          <li><span class="t">17:30~</span><span class="what">파리 숙소 (15구, Tour Eiffel 인근) 체크인<small>10 Allée Joseph Récamier · 택시 약 25~30분 · RER C도 가능</small></span></li>
+        </ul>
+        <p class="note">수하물 (Baggage): 좌석당 캐리어 2개 + 핸드백 1개 (각 75cm 이내)</p>
+        <div class="row">
+          <a class="btn primary" href="https://www.eurostar.com" target="_blank">유로스타 (Eurostar)</a>
+          <a class="btn" href="https://maps.app.goo.gl/HwWeMmUPGdWFaFfs8" target="_blank">숙소 → 역 경로 (Google Maps)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>세인트 판크라스 → 파리 북역 (St Pancras → Gare du Nord)</h3>
+        <div id="mapUK-D5" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="eurostar" checked><label>유로스타 (Eurostar) 9/15 13:31 — 확정</label></li>
+          <li><input type="checkbox" data-key="paris-stay" checked><label>파리 (Paris) 숙소 예약 — 확정</label></li>
+          <li><input type="checkbox" data-key="paris-taxi"><label>파리 북역 (Gare du Nord) → 파리 숙소 이동수단</label></li>
+        </ul>
+        <div class="row">
+          <a class="btn primary" href="https://www.airbnb.co.kr/trips/v1/reservation-details/ro/RESERVATION2_CHECKIN/HMJNDQRQSC" target="_blank">파리 숙소 예약 정보 (Airbnb)</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 영국 체크리스트 -->
+    <section class="day" id="uk-chk">
+      <div class="card">
+        <h2>예약 체크리스트</h2>
+        <p class="muted" style="margin:0 0 8px">시한 있는 항목부터. 체크 상태는 이 기기에 저장됩니다.</p>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="eta"><label>영국 전자여행허가 (ETA) 신청 — 출국 3영업일 전</label></li>
+          <li><input type="checkbox" data-key="airbnb" checked><label>소호 (Soho) 숙소 4박 — 확정</label></li>
+          <li><input type="checkbox" data-key="eurostar" checked><label>유로스타 (Eurostar) 9/15 13:31 — 확정</label></li>
+          <li><input type="checkbox" data-key="ox-train"><label>옥스퍼드 (Oxford) 왕복 기차표</label></li>
+          <li><input type="checkbox" data-key="christchurch"><label>크라이스트 처치 (Christ Church) 입장권</label></li>
+          <li><input type="checkbox" data-key="bodleian"><label>보들리언 도서관 (Bodleian Library) 투어 — 선택</label></li>
+          <li><input type="checkbox" data-key="tower"><label>런던탑 (Tower of London) 입장권</label></li>
+          <li><input type="checkbox" data-key="towerbridge"><label>타워 브리지 글래스 워크 (Tower Bridge Glass Walk) — 선택</label></li>
+          <li><input type="checkbox" data-key="shard"><label>더 샤드 (The Shard) 입장권 — 1일차 노을</label></li>
+          <li><input type="checkbox" data-key="westminster"><label>웨스트민스터 사원 (Westminster Abbey) 입장권 — 선택</label></li>
+          <li><input type="checkbox" data-key="eye"><label>런던아이 (London Eye) 탑승 여부</label></li>
+          <li><input type="checkbox" data-key="snap"><label>허니문 스냅 진행 여부 결정 (35만원)</label></li>
+          <li><input type="checkbox" data-key="snap-spot"><label>노팅힐 (Notting Hill) 스냅 스팟 픽</label></li>
+          <li><input type="checkbox" data-key="soho-dinner"><label>소호 (Soho) 저녁 식당 후보</label></li>
+          <li><input type="checkbox" data-key="camden-dinner"><label>캠든 (Camden) 저녁 식당 후보</label></li>
+          <li><input type="checkbox" data-key="camra"><label>캄라 (CAMRA) 펍 후보 픽</label></li>
+          <li><input type="checkbox" data-key="cash"><label>환전 (트래블월렛 / 트래블로그)</label></li>
+          <li><input type="checkbox" data-key="insurance"><label>여행자보험 (Travel Insurance)</label></li>
+          <li><input type="checkbox" data-key="esim"><label>이심 (eSIM, Airalo)</label></li>
+          <li><input type="checkbox" data-key="adapter"><label>멀티어댑터 (BF타입)</label></li>
+          <li><input type="checkbox" data-key="pack"><label>짐 정리 — 유로스타 수하물 규정 확인</label></li>
+          <li><input type="checkbox" data-key="paris-stay" checked><label>파리 (Paris) 숙소 예약 — 확정</label></li>
+          <li><input type="checkbox" data-key="paris-taxi"><label>파리 북역 (Gare du Nord) → 파리 숙소 이동수단</label></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- 2. 파리 (PARIS) BLOCK — paris.html 원본 내용 100% 무손실 이관 -->
+  <!-- ================================================================= -->
+  <div id="c-paris" class="country-block">
+    <header class="hero paris-hero">
+      <div class="sub">허니문 · 파리 (Paris)</div>
+      <h1>파리 허니문</h1>
+      <div class="sub">2026.09.15 (화) → 2026.09.18 (금) · 3박</div>
+      <div class="meta">
+        <span>👫 성인 2명 (2 adults)</span>
+        <span>🛏 파리 에어비앤비 (Airbnb) · 3박</span>
+        <span>🚄 유로스타 9/15 · TGV 9/18</span>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://www.airbnb.co.kr/trips/v1/reservation-details/ro/RESERVATION2_CHECKIN/HMJNDQRQSC" target="_blank">파리 숙소 (Airbnb)</a>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=10+All.+Joseph+Recamier%2C+75015+Paris" target="_blank">숙소 위치 (Google Maps)</a>
+      </div>
+    </header>
+
+    <nav class="days" id="daysNav-paris">
+      <button type="button" data-d="paris-overview" class="active">개요</button>
+      <button type="button" data-d="paris-d1">1일 9/15</button>
+      <button type="button" data-d="paris-d2">2일 9/16</button>
+      <button type="button" data-d="paris-d3">3일 9/17</button>
+      <button type="button" data-d="paris-d4">4일 9/18</button>
+      <button type="button" data-d="paris-chk">체크</button>
+    </nav>
+
+    <!-- 파리 개요 -->
+    <section class="day active" id="paris-overview">
+      <div class="card">
+        <h2>전체 동선</h2>
+        <div id="mapParis-All" class="map big"></div>
+        <p class="muted" style="margin:8px 0 0; font-size:12.5px">핀을 탭하면 일정·구글맵 링크가 표시됩니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>여행 한눈에</h2>
+        <ul class="tl">
+          <li><span class="t">9/15 화</span><span class="what">유로스타 (Eurostar) 16:59 도착 → 숙소 → 에펠탑 (Tour Eiffel) · 개선문 (Arc de Triomphe)<small>1일차</small></span></li>
+          <li><span class="t">9/16 수</span><span class="what">팡테옹 (Panthéon) → 라탱 → 시테섬 → 루브르 → 튀일리 → 오랑주리 → 콩코르드<small>2일차</small></span></li>
+          <li><span class="t">9/17 목</span><span class="what">몽마르트르 (Montmartre) → 마레 (Le Marais) → 오르세 (Musée d’Orsay) → 센강 디너 크루즈<small>3일차</small></span></li>
+          <li><span class="t">9/18 금</span><span class="what">체크아웃 → TGV 또는 야간기차로 스위스 이동<small>4일차</small></span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>현지 팁</h2>
+        <details open>
+          <summary>🎫 미리 예약해야 하는 것</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            에펠탑 (Tour Eiffel) 정상 · 루브르 (Louvre) · 오랑주리 (Orangerie) · 오르세 (Orsay) · 생트 샤펠 (Sainte-Chapelle) · 센강 디너 크루즈 — 모두 시간 슬롯 매진 빨라서 출국 전 예약 권장.
+          </p>
+        </details>
+        <details>
+          <summary>🚇 메트로 (Métro) / RER</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            나비고 이지 (Navigo Easy) 카드 또는 모바일 티켓. 1회권 €2.10 정도. 짐 들고 RER C는 환승 없이 숙소 근처 갈 수 있음.
+          </p>
+        </details>
+        <details>
+          <summary>💶 팁 / 결제</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            식당 자동 봉사료 포함 (service compris). 만족스러우면 €1~2 잔돈 정도. 카드 어디서나 OK.
+          </p>
+        </details>
+        <details>
+          <summary>📸 사진 스팟 베스트</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            트로카데로 (Trocadéro) 광장 (에펠탑 정면) · 비르 아켐 다리 (Pont de Bir-Hakeim) · 사크레쾨르 (Sacré-Cœur) 광장 · 갤러리 비비엔 (Galerie Vivienne) · 플라스 데 보주 (Place des Vosges)
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 파리 1일차 -->
+    <section class="day" id="paris-d1">
+      <div class="card">
+        <h2>1일차 · 9/15 (화) <span class="pill">에펠탑 · 개선문 (Tour Eiffel · Arc de Triomphe)</span></h2>
+        <p class="muted" style="margin:0 0 6px">파리 북역 17:00 도착 → 숙소 체크인 → 에펠탑 일몰 + 개선문 야경.</p>
+        <div id="mapParis-D1" class="map"></div>
+        <div class="row">
+          <a class="btn primary" href="https://www.toureiffel.paris/en" target="_blank">에펠탑 예약</a>
+          <a class="btn" href="https://www.paris-arc-de-triomphe.fr/en" target="_blank">개선문 예약</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">16:59</span><span class="what">파리 북역 (Gare du Nord) 도착</span></li>
+          <li><span class="t">17:30</span><span class="what">택시로 숙소 (15구) 이동<small>약 25~30분, €25~30 / 짐 있으니 택시 권장</small></span></li>
+          <li><span class="t">18:00</span><span class="what">숙소 체크인 + 짐 풀기</span></li>
+          <li><span class="t">18:30</span><span class="what">숙소 → 에펠탑 (Tour Eiffel)<small>도보 약 25~30분 (불로뉴 숲 경유 산책 좋음) / 메트로 9호선 La Muette → 6호선 환승 약 15분 / 택시 10분</small></span></li>
+          <li><span class="t">19:00</span><span class="what">샹 드 마르스 (Champ-de-Mars) 잔디밭 + 에펠탑 일몰<small>9월 일몰 약 19:50 — 와인 한 잔 추천</small></span></li>
+          <li><span class="t">20:00</span><span class="what">에펠탑 점등 + 정시 반짝임 (every hour, 5분간) ✨</span></li>
+          <li><span class="t">20:30</span><span class="what">트로카데로 (Trocadéro) 광장 정면 사진<small>비르 아켐 다리 (Pont de Bir-Hakeim) 거쳐가도 좋음</small></span></li>
+          <li><span class="t">21:00</span><span class="what">메트로 → 샹젤리제 (Champs-Élysées) → 개선문 (Arc de Triomphe)<small>야경 베스트, 옥상 전망대 23:00까지 운영</small></span></li>
+          <li><span class="t">22:30</span><span class="what">샹젤리제 비스트로 늦은 저녁<small>또는 숙소 근처 와인바</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="airbnb-paris" checked><label>파리 (Paris) 숙소 3박 — 확정</label></li>
+          <li><input type="checkbox" data-key="taxi-gdn"><label>파리 북역 (Gare du Nord) → 숙소 택시 / Uber</label></li>
+          <li><input type="checkbox" data-key="eiffel"><label>에펠탑 (Tour Eiffel) 정상 입장권 — 시간 슬롯</label></li>
+          <li><input type="checkbox" data-key="arc"><label>개선문 (Arc de Triomphe) 옥상 전망 입장권</label></li>
+          <li><input type="checkbox" data-key="dinner-d1"><label>1일차 저녁 식당 후보</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 파리 2일차 -->
+    <section class="day" id="paris-d2">
+      <div class="card">
+        <h2>2일차 · 9/16 (수) <span class="pill">라탱 · 시테 · 루브르 (Latin · Cité · Louvre)</span></h2>
+        <p class="muted" style="margin:0 0 6px">5구 → 4구 → 1구. 도보 + 메트로 1~2회. 풀데이.</p>
+        <div id="mapParis-D2" class="map"></div>
+        <div class="row">
+          <a class="btn primary" href="https://www.ticketlouvre.fr" target="_blank">루브르 예약</a>
+          <a class="btn" href="https://www.musee-orangerie.fr" target="_blank">오랑주리 예약</a>
+          <a class="btn" href="https://www.sainte-chapelle.fr/en" target="_blank">생트 샤펠 예약</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:00</span><span class="what">숙소 → 팡테옹 (Panthéon) — 메트로 RER B 또는 10호선<small>위인들의 묘 + 옥상 돔 전망</small></span></li>
+          <li><span class="t">10:30</span><span class="what">라탱 거리 (Quartier Latin) 산책<small>뤽상부르 정원 (Jardin du Luxembourg) 잠깐 들리기 좋음</small></span></li>
+          <li><span class="t">12:00</span><span class="what">라탱 점심 — 비스트로 / 크레페</span></li>
+          <li><span class="t">13:30</span><span class="what">노트르담 대성당 (Notre-Dame) 외관<small>2024 재개관, 외관 + 광장 + 강가 사진</small></span></li>
+          <li><span class="t">14:00</span><span class="what">셰익스피어 앤 컴퍼니 (Shakespeare & Co.)<small>영화 비포 선셋 촬영지 — 가볍게</small></span></li>
+          <li><span class="t">14:30</span><span class="what">생트 샤펠 (Sainte-Chapelle) 🌟<small>13세기 스테인드글라스 — 노트르담 옆, 시간 슬롯 예약</small></span></li>
+          <li><span class="t">15:30</span><span class="what">시테섬 (Île de la Cité) 강변 산책 → 퐁뇌프 (Pont Neuf)</span></li>
+          <li><span class="t">16:00</span><span class="what">루브르 (Louvre) — 핵심만 1.5h<small>모나리자·니케·밀로의 비너스·들라크루아 (혼잡 시 짧게)</small></span></li>
+          <li><span class="t">17:30</span><span class="what">튀일리 정원 (Jardin des Tuileries) 산책</span></li>
+          <li><span class="t">18:00</span><span class="what">오랑주리 미술관 (Musée d’Orangerie)<small>모네 수련 8점 — 신혼 추천 ★</small></span></li>
+          <li><span class="t">19:30</span><span class="what">콩코르드 광장 (Place de la Concorde)<small>오벨리스크 + 일몰 사진</small></span></li>
+          <li><span class="t">20:00</span><span class="what">샹젤리제 또는 1구 비스트로 저녁</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>여유 있을 때 추가</h3>
+        <ul class="tl">
+          <li><span class="t">·</span><span class="what">뤽상부르 정원 (Jardin du Luxembourg)<small>팡테옹 옆, 도보 5분</small></span></li>
+          <li><span class="t">·</span><span class="what">생제르맹데프레 (Saint-Germain-des-Prés)<small>카페 드 플로르 / 레 되 마고</small></span></li>
+          <li><span class="t">·</span><span class="what">콩시에르주리 (Conciergerie)<small>마리 앙투아네트 감옥, 시테섬</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="pantheon"><label>팡테옹 (Panthéon) 입장 — 옥상 돔 별도</label></li>
+          <li><input type="checkbox" data-key="saintechapelle"><label>생트 샤펠 (Sainte-Chapelle) — 시간 슬롯 ★</label></li>
+          <li><input type="checkbox" data-key="louvre"><label>루브르 (Louvre) — 시간 슬롯 예약 필수</label></li>
+          <li><input type="checkbox" data-key="orangerie"><label>오랑주리 (Orangerie) — 시간 슬롯</label></li>
+          <li><input type="checkbox" data-key="dinner-d2"><label>2일차 저녁 식당 후보</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 파리 3일차 -->
+    <section class="day" id="paris-d3">
+      <div class="card">
+        <h2>3일차 · 9/17 (목) <span class="pill">몽마르트르 · 마레 · 오르세 (Montmartre · Marais · Orsay)</span></h2>
+        <p class="muted" style="margin:0 0 6px">북쪽 언덕 → 동쪽 옛 동네 → 강변 인상파 → 센강 디너 크루즈.</p>
+        <div id="mapParis-D3" class="map"></div>
+        <div class="row">
+          <a class="btn primary" href="https://www.musee-orsay.fr/en" target="_blank">오르세 예약</a>
+          <a class="btn" href="https://www.bateauxparisiens.com/english.html" target="_blank">디너 크루즈 (Bateaux Parisiens)</a>
+          <a class="btn" href="https://www.bateaux-mouches.fr/en" target="_blank">디너 크루즈 (Bateaux-Mouches)</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:00</span><span class="what">숙소 → 몽마르트르 (Montmartre) — 메트로 12호선 → Abbesses 역</span></li>
+          <li><span class="t">09:30</span><span class="what">사랑해 벽 (Le Mur des Je t’aime)<small>Abbesses 역 옆 — 250개 언어 ‘사랑해’</small></span></li>
+          <li><span class="t">10:00</span><span class="what">아멜리 카페 (Café des Deux Moulins) 브런치<small>영화 아멜리 촬영지</small></span></li>
+          <li><span class="t">11:00</span><span class="what">몽마르트르 골목 산책 → 테르트르 광장 (Place du Tertre)<small>화가 거리, 초상화</small></span></li>
+          <li><span class="t">12:00</span><span class="what">사크레쾨르 (Sacré-Cœur) 성당 + 광장 뷰<small>파리 전체 무료 전망</small></span></li>
+          <li><span class="t">13:00</span><span class="what">물랭 루주 (Moulin Rouge) 외관<small>피갈 (Pigalle) 역 근처, 잠깐</small></span></li>
+          <li><span class="t">13:30</span><span class="what">메트로로 마레 (Le Marais) 이동 — 약 20분</span></li>
+          <li><span class="t">14:00</span><span class="what">미즈농 마레 (Miznon Marais) 늦은 점심<small>이스라엘 셰프 Eyal Shani 본점 — 피타·콜리플라워가 시그니처</small></span></li>
+          <li><span class="t">15:00</span><span class="what">플라스 데 보주 (Place des Vosges)<small>17세기 광장 — 빅토르 위고 박물관 옆 (무료)</small></span></li>
+          <li><span class="t">16:00</span><span class="what">마레 골목 — 부띠끄 · 갤러리 · 디저트 (Pierre Hermé / Carette)</span></li>
+          <li><span class="t">17:00</span><span class="what">메트로로 센강 건너 → 오르세 미술관 (Musée d’Orsay)<small>목요일 21:45까지 야간 개관 ★</small></span></li>
+          <li><span class="t">19:30</span><span class="what">알마 (Pont de l’Alma) 또는 비르 아켐 (Bir-Hakeim) 선착장 이동</span></li>
+          <li><span class="t">20:30</span><span class="what">센강 디너 크루즈 (Seine Dinner Cruise) 🛥️🍷<small>1.5시간 · 에펠탑 야경 + 디너 — 신혼 마무리</small></span></li>
+          <li><span class="t">22:30</span><span class="what">숙소 복귀 — 짐 정리 시작</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>여유 있을 때 추가</h3>
+        <ul class="tl">
+          <li><span class="t">·</span><span class="what">달리다 (Dalida) 흉상 + 라 메종 로즈 (La Maison Rose)<small>몽마르트르 핑크색 카페</small></span></li>
+          <li><span class="t">·</span><span class="what">피카소 미술관 (Musée Picasso)<small>마레 한복판</small></span></li>
+          <li><span class="t">·</span><span class="what">갤러리 비비엔 (Galerie Vivienne)<small>1·2구 19세기 파사주 (passage), 사진 좋음</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="orsay"><label>오르세 (Musée d’Orsay) 입장권 — 시간 슬롯</label></li>
+          <li><input type="checkbox" data-key="cruise" data-emph><label>센강 디너 크루즈 (Seine Dinner Cruise) — 신혼 ★</label></li>
+          <li><input type="checkbox" data-key="picasso"><label>피카소 미술관 (Musée Picasso) — 선택</label></li>
+          <li><input type="checkbox" data-key="brunch-amelie"><label>아멜리 카페 (Deux Moulins) 또는 다른 브런치 후보</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 파리 4일차 -->
+    <section class="day" id="paris-d4">
+      <div class="card">
+        <h2>4일차 · 9/18 (금) <span class="pill">스위스 이동 (To Switzerland)</span></h2>
+        <p class="muted" style="margin:0 0 6px">파리 리옹 역 (Gare de Lyon) → 스위스. TGV Lyria 약 3~4h.</p>
+        <div id="mapParis-D4" class="map"></div>
+        <ul class="tl">
+          <li><span class="t">오전</span><span class="what">체크아웃 + 짐 정리<small>늦은 브런치 / 못 가본 카페 마지막</small></span></li>
+          <li><span class="t">중간</span><span class="what">파리 리옹 역 (Gare de Lyon)으로 이동<small>택시 약 25분, 메트로 가능 / 출발 30~45분 전 도착</small></span></li>
+          <li><span class="t">오후</span><span class="what">TGV Lyria (TGV) 출발 → 스위스 도착<small>파리 → 제네바 약 3h, 파리 → 바젤/취리히 약 3~4h</small></span></li>
+          <li><span class="t">저녁</span><span class="what">스위스 숙소 체크인</span></li>
+        </ul>
+        <p class="note">TGV 수하물: 한 사람당 큰 짐 2개 + 핸드백 1개. 좌석 위 선반 또는 객차 끝 짐칸.</p>
+        <div class="row">
+          <a class="btn primary" href="https://www.tgv-lyria.com/en" target="_blank">TGV Lyria 예약</a>
+        </div>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="tgv"><label>TGV Lyria 9/18 티켓 (advance fare 저렴)</label></li>
+          <li><input type="checkbox" data-key="taxi-lyon"><label>숙소 → 파리 리옹 역 (Gare de Lyon) 택시</label></li>
+          <li><input type="checkbox" data-key="ch-stay"><label>스위스 숙소 예약</label></li>
+          <li><input type="checkbox" data-key="pack-paris"><label>짐 정리 — 항공/기차 수하물 규정 확인</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 파리 체크리스트 -->
+    <section class="day" id="paris-chk">
+      <div class="card">
+        <h2>예약 체크리스트</h2>
+        <p class="muted" style="margin:0 0 8px">시간 슬롯 매진 빠른 항목부터. 체크 상태는 이 기기에 저장됩니다.</p>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="airbnb-paris" checked><label>파리 숙소 3박 — 확정</label></li>
+          <li><input type="checkbox" data-key="eiffel"><label>에펠탑 (Tour Eiffel) 정상 입장권 ★</label></li>
+          <li><input type="checkbox" data-key="arc"><label>개선문 (Arc de Triomphe) 옥상</label></li>
+          <li><input type="checkbox" data-key="louvre"><label>루브르 (Louvre) ★</label></li>
+          <li><input type="checkbox" data-key="orangerie"><label>오랑주리 (Orangerie)</label></li>
+          <li><input type="checkbox" data-key="saintechapelle"><label>생트 샤펠 (Sainte-Chapelle) ★</label></li>
+          <li><input type="checkbox" data-key="pantheon"><label>팡테옹 (Panthéon)</label></li>
+          <li><input type="checkbox" data-key="orsay"><label>오르세 (Musée d’Orsay) ★</label></li>
+          <li><input type="checkbox" data-key="picasso"><label>피카소 미술관 (Picasso) — 선택</label></li>
+          <li><input type="checkbox" data-key="cruise"><label>센강 디너 크루즈 ★</label></li>
+          <li><input type="checkbox" data-key="taxi-gdn"><label>북역 → 숙소 택시</label></li>
+          <li><input type="checkbox" data-key="tgv"><label>TGV Lyria 9/18 티켓</label></li>
+          <li><input type="checkbox" data-key="taxi-lyon"><label>숙소 → 리옹 역 택시</label></li>
+          <li><input type="checkbox" data-key="dinner-d1"><label>1일차 저녁 식당 후보</label></li>
+          <li><input type="checkbox" data-key="dinner-d2"><label>2일차 저녁 식당 후보</label></li>
+          <li><input type="checkbox" data-key="brunch-amelie"><label>아멜리 카페 / 브런치 후보</label></li>
+          <li><input type="checkbox" data-key="ch-stay"><label>스위스 숙소 예약</label></li>
+          <li><input type="checkbox" data-key="pack-paris"><label>짐 정리 — 수하물 규정 확인</label></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- 3. 스위스 (SWITZERLAND) BLOCK — switzerland.html 원본 내용 100% 무손실 이관 -->
+  <!-- ================================================================= -->
+  <div id="c-swiss" class="country-block">
+    <header class="hero swiss-hero">
+      <div class="sub">허니문 · 스위스 (Switzerland)</div>
+      <h1>스위스 허니문</h1>
+      <div class="sub">2026.09.18 (금) → 2026.09.23 (수) · 5박 6일 (귀국)</div>
+      <div class="meta">
+        <span>👫 성인 2명 (2 adults)</span>
+        <span>🛏 운터젠(2박) · 그린델발트 선스타(1박) · 취리히 MANY'S(1박)</span>
+        <span>🇨🇭 인터라켄 / 그린델발트 / 취리히 5박 6일</span>
+        <span>✈️ 9/22 19:30 취리히 출발 → 9/23 14:10 인천 도착</span>
+      </div>
+      <div class="row">
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Obere+Gasse%2C+Unterseen%2C+Bern+3800" target="_blank">운터젠 숙소 (Google Maps)</a>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=Sunstar+Hotel+Grindelwald" target="_blank">선스타 호텔 (Google Maps)</a>
+        <a class="btn" href="https://www.google.com/maps/search/?api=1&query=MANY%27S+historical+city+central+APARTMENTS" target="_blank">취리히 숙소 (Google Maps)</a>
+      </div>
+    </header>
+
+    <nav class="days" id="daysNav-swiss">
+      <button type="button" data-d="swiss-overview" class="active">개요</button>
+      <button type="button" data-d="swiss-d8">8일 9/18</button>
+      <button type="button" data-d="swiss-d9">9일 9/19</button>
+      <button type="button" data-d="swiss-d10">10일 9/20</button>
+      <button type="button" data-d="swiss-d11">11일 9/21</button>
+      <button type="button" data-d="swiss-d12">12일 9/22</button>
+      <button type="button" data-d="swiss-d13">13일 9/23</button>
+      <button type="button" data-d="swiss-chk">체크</button>
+    </nav>
+
+    <!-- 스위스 개요 -->
+    <section class="day active" id="swiss-overview">
+      <div class="card">
+        <h2>스위스 동선 지도</h2>
+        <div id="mapSwiss-All" class="map big"></div>
+        <p class="muted" style="margin:8px 0 0; font-size:12.5px">핀을 탭하면 주요 거점·링크가 표시됩니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>스위스 일정 한눈에</h2>
+        <ul class="tl">
+          <li><span class="t">9/18 금</span><span class="what">파리 출발 → 인터라켄 웨스트 도착(15:53) · 운터젠 체크인 · 브리엔츠 호수(이젤트발트)<small>8일차</small></span></li>
+          <li><span class="t">9/19 토</span><span class="what">오전 융프라우요흐 Top of Europe · 오후 피르스트 (우천 시: 베른 당일치기)<small>9일차</small></span></li>
+          <li><span class="t">9/20 일</span><span class="what">인터라켄 → 그린델발트 기차 이동 · 선스타 호텔 체크인 (16:00) · 핑슈텍 루지<small>10일차</small></span></li>
+          <li><span class="t">9/21 월</span><span class="what">라우터브루넨 폭포 마을 → 취리히 이동 · 린덴호프 노을 & 강변 야경<small>11일차</small></span></li>
+          <li><span class="t">9/22 화</span><span class="what">취리히 반호프슈트라세 쇼핑 & 초콜릿 구매 → 취리히 공항 출발 (19:30)<small>12일차</small></span></li>
+          <li><span class="t">9/23 수</span><span class="what">인천 국제공항 14:10 도착 · 귀국<small>13일차</small></span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>스위스 여행 팁</h2>
+        <details open>
+          <summary>🎫 스위스 트래블 패스 (Swiss Travel Pass)</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            기차, 유람선, 버스 무제한 탑승 및 대부분의 산악열차 50% 할인. 연속/프렉시 티켓 일정 선택 필요.
+          </p>
+        </details>
+        <details>
+          <summary>🏔 날씨 및 복장 준비</summary>
+          <p style="margin:6px 0 0; font-size:13.5px">
+            고지대 산악지대(융프라우, 마테호른 등)는 9월에도 바람이 차고 추울 수 있으므로 경량 패딩 및 겹쳐 입을 옷 준비.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- 스위스 8일차 -->
+    <section class="day" id="swiss-d8">
+      <div class="card">
+        <h2>8일차 · 9/18 (금) <span class="pill">파리 → 스위스 이동 & 브리엔츠 호수</span></h2>
+        <p class="muted" style="margin:0 0 6px">파리 리옹역 → 바젤 환승 → 인터라켄 웨스트 도착 → 운터젠 체크인 & 이젤트발트(브리엔츠 호수)</p>
+        <div id="mapSwiss-D8" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>시간대별 타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:30</span><span class="what">파리 숙소 체크아웃 & 파리 리옹역 (Gare du Lyon) 이동<small>출발 최소 40분 전 역 도착 권장</small></span></li>
+          <li><span class="t">10:22</span><span class="what">파리 리옹역 출발 (TGV Lyria)<small>프랑스 → 스위스 바젤행 초고속열차 (약 3시간 1분 소요)</small></span></li>
+          <li><span class="t">13:23</span><span class="what">바젤 역 (Basel SBB) 도착 & 환승<small>환승 대기시간 35분</small></span></li>
+          <li><span class="t">13:58</span><span class="what">바젤 역 출발 (SBB 기차)<small>인터라켄행 기차 탑승 (약 1시간 55분 소요)</small></span></li>
+          <li><span class="t">15:53</span><span class="what">인터라켄 웨스트 역 (Interlaken West) 도착 🇨🇭<small>스위스 인터라켄 입성</small></span></li>
+          <li><span class="t">16:15</span><span class="what">운터젠 숙소 체크인 (Obere Gasse, Unterseen)<small>역에서 도보 약 8분 · ★체크인 시 '인터라켄 게스트 카드(Visitor Card)' 무료 발급 받기</small></span></li>
+          <li><span class="t">17:00</span><span class="what">인터라켄 오스트 역 이동 → 103번 버스 탑승<small>숙소 게스트 카드 사용 (브리엔츠 호숫가 마을 이젤트발트행 버스 무료/할인)</small></span></li>
+          <li><span class="t">17:25</span><span class="what">이젤트발트 (Iseltwald) 도착 & 브리엔츠 호수 산책 📸<small>사랑의 불시착 피아노 촬영지 · 에메랄드빛 호수 감상</small></span></li>
+          <li><span class="t">18:50</span><span class="what">103번 버스로 인터라켄 복귀</span></li>
+          <li><span class="t">19:30</span><span class="what">운터젠 / 인터라켄 시내 저녁 식사<small>스위스 퐁뒤 (Fondue) 또는 뢰스티 (Rösti)</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 & 팁 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="swiss-tgv" checked><label>파리 리옹역(10:22) → 바젤(13:23) TGV Lyria 기차표</label></li>
+          <li><input type="checkbox" data-key="swiss-sbb" checked><label>바젤(13:58) → 인터라켄 웨스트(15:53) SBB 기차표 (예매 완료)</label></li>
+          <li><input type="checkbox" data-key="unterseen-stay" checked><label>운터젠 숙소 2박 (Obere Gasse, Unterseen, Bern 3800) — 9/18~9/20</label></li>
+          <li><input type="checkbox" data-key="guest-card" checked><label>🎁 운터젠 숙소 체크인 시 '인터라켄 게스트 카드 (Visitor Card)' 무료 발급 받기 (103번 이젤트발트 버스 혜택)</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 9일차 -->
+    <section class="day" id="swiss-d9">
+      <div class="card">
+        <h2>9일차 · 9/19 (토) <span class="pill">융프라우 & 피르스트</span></h2>
+        <p class="muted" style="margin:0 0 6px">오전 융프라우요흐 Top of Europe → 오후 그린델발트 피르스트 산책 / 액티비티</p>
+        <div id="mapSwiss-D9" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>메인 타임라인 (맑을 때)</h3>
+        <ul class="tl">
+          <li><span class="t">07:40</span><span class="what">운터젠 숙소 출발 → 그린델발트 터미널 (Grindelwald Terminal) 이동<small>인터라켄 오스트 기차 / 버스 탑승</small></span></li>
+          <li><span class="t">08:30</span><span class="what">그린델발트 터미널 출발 (아이거 익스프레스 곤돌라)<small>아이거 익스프레스 + 산악열차 (약 45분 만에 초고속 도착)</small></span></li>
+          <li><span class="t">09:15</span><span class="what">융프라우요흐 (Jungfraujoch Top of Europe) 관람 🏔<small>스핑크스 전망대 · 얼음궁전 · 만년설 산책 · 신라면 무료 컵라면</small></span></li>
+          <li><span class="t">11:40</span><span class="what">융프라우요흐 출발 → 그린델발트 마을 하산<small>그린델발트 마을 도착 후 점심 식사</small></span></li>
+          <li><span class="t">13:30</span><span class="what">그린델발트 피르스트 (First) 곤돌라 탑승<small>곤돌라 타고 피르스트 정상 이동 (약 25분)</small></span></li>
+          <li><span class="t">14:00</span><span class="what">피르스트 클리프 워크 (Cliff Walk) & 절벽 산책 📸<small>아찔한 절벽 구름다리 산책 · 아이거 북벽 포토존</small></span></li>
+          <li><span class="t">15:15</span><span class="what">보어트 (Bort) 역 이동 후 트로티바이크 (Trottibike 자전거) 탑승 🚲<small>알프스 초원 시골 마을 4.5km 내리막길 라이딩 (그린델발트 하산)</small></span></li>
+          <li><span class="t">16:30</span><span class="what">그린델발트 마을 도착 후 트로티바이크 반납 & 인터라켄 복귀<small>그린델발트에서 기차 탑승</small></span></li>
+          <li><span class="t">18:30</span><span class="what">운터젠 숙소 도착 & 인터라켄 시내 저녁 휴식</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🌧 플랜 B (우천 / 악천후 시 대안) — 베른 (Bern) 당일치기</h3>
+        <ul class="tl">
+          <li><span class="t">오전</span><span class="what">인터라켄 웨스트 역 → 베른 역 (Bern SBB) 이동<small>기차 약 50분 소요 (스위스 패스 무제한)</small></span></li>
+          <li><span class="t">점심</span><span class="what">베른 구시가지 (유네스코 세계유산) & 아케이드 쇼핑<small>6km 연속 지붕 통로로 비 피하기 좋음</small></span></li>
+          <li><span class="t">오후</span><span class="what">시계탑 (Zytglogge) · 곰 공원 (Bärenpark) · 장미 공원 (Rosengarten)<small>장미 공원에서 베른 구시가지 한눈에 전경 감상</small></span></li>
+          <li><span class="t">저녁</span><span class="what">베른 수제 맥주 펍 / 저녁 식사 후 인터라켄 복귀</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>이날 예약 & 패스 구매 팁</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="dongshin-coupon" checked><label>📄 동신항운 융프라우 할인쿠폰 (신라면 무료 교환권) 한국에서 인쇄/소지</label></li>
+          <li><input type="checkbox" data-key="jungfrau-vip" checked><label>🏔 융프라우 1일 VIP 패스 (당일 아침 날씨 확인 후 그린델발트/인터라켄 역 창구에서 쿠폰 제시 후 현장 구매)</label></li>
+          <li><input type="checkbox" data-key="trottibike-ticket"><label>🚲 피르스트 트로티바이크 (Trottibike 자전거) 보어트 역 현장 티켓 구매/탑승</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 10일차 -->
+    <section class="day" id="swiss-d10">
+      <div class="card">
+        <h2>10일차 · 9/20 (일) <span class="pill">그린델발트 이동 & 아이거 뷰 숙박</span></h2>
+        <p class="muted" style="margin:0 0 6px">인터라켄 오스트 → 그린델발트 기차 이동 (BOB) → 선스타 호텔 체크인 (16:00) & 핑슈텍 루지</p>
+        <div id="mapSwiss-D10" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>시간대별 타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">10:30</span><span class="what">운터젠 숙소 체크아웃 & 인터라켄 오스트 역 (Interlaken Ost) 이동</span></li>
+          <li><span class="t">11:02</span><span class="what">인터라켄 오스트 역 출발 (BOB 기차)<small>★ Sector A (그린델발트행) 앞쪽 탑승 필수 · 약 34분 소요</small></span></li>
+          <li><span class="t">11:36</span><span class="what">그린델발트 역 (Grindelwald) 도착 🇨🇭<small>아이거 북벽 병풍 마을 입성</small></span></li>
+          <li><span class="t">11:50</span><span class="what">선스타 호텔 그린델발트 (Sunstar Hotel) 이동 & 짐 보관<small>체크인(16:00) 전 짐 맡기기 (도보 약 5분)</small></span></li>
+          <li><span class="t">12:15</span><span class="what">그린델발트 시내 점심 식사</span></li>
+          <li><span class="t">13:30</span><span class="what">핑슈텍 (Pfingstegg) 케이블카 탑승 & 액티비티 🛷<small>선스타 호텔 도보 5분 · 725m 알프스 토보건(루지) & 플라이라인 숲속 짚라인</small></span></li>
+          <li><span class="t">16:00</span><span class="what">선스타 호텔 체크인 (16:00) & 스파 / 객실 발코니 휴식<small>객실 발코니 아이거 북벽 뷰 감상 🏔</small></span></li>
+          <li><span class="t">18:30</span><span class="what">그린델발트 시내 / 호텔 저녁 식사<small>스위스 스테이크 / 퐁뒤 / 스위스 와인 한 잔 🍷</small></span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🏔 대안 옵션 — 멘리헨 (Männlichen) 파노라마 산책</h3>
+        <ul class="tl">
+          <li><span class="t">대안</span><span class="what">그린델발트 터미널 → 멘리헨 곤돌라 탑승 (약 20분)<small>로열 워크(Royal Walk) 왕관 전망대 산책 · 360도 융프라우 3대 영봉 조망</small></span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="sunstar-stay" checked><label>선스타 호텔 그린델발트 (Sunstar Hotel) 1박 — 9/20~9/21 (체크인 16:00 / 체크아웃 11:00)</label></li>
+          <li><input type="checkbox" data-key="bob-train" checked><label>인터라켄 오스트 → 그린델발트 BOB 기차 (Sector A 탑승 확인)</label></li>
+          <li><input type="checkbox" data-key="pfingstegg-luge"><label>핑슈텍 케이블카 & 루지 (Toboggan) 현장 티켓 구매</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 11일차 -->
+    <section class="day" id="swiss-d11">
+      <div class="card">
+        <h2>11일차 · 9/21 (월) <span class="pill">폭포 마을 & 취리히 노을 야경</span></h2>
+        <p class="muted" style="margin:0 0 6px">그린델발트 체크아웃 → 라우터브루넨 폭포 마을 → 취리히 이동 & 린덴호프 노을 야경 디너</p>
+        <div id="mapSwiss-D11" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>시간대별 타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:00~</span><span class="what">선스타 호텔 아이거 뷰 조식 & 11:00 체크아웃</span></li>
+          <li><span class="t">11:15</span><span class="what">그린델발트 출발 → 라우터브루넨 (Lauterbrunnen) 이동<small>기차 약 30분 소요</small></span></li>
+          <li><span class="t">11:45</span><span class="what">라우터브루넨 폭포 마을 탐방 & 슈타우프바흐 폭포 (Staubbach Falls) 📸<small>절벽 수직 폭포 산책 & 동화 마을 점심 식사</small></span></li>
+          <li><span class="t">14:30</span><span class="what">인터라켄 오스트 출발 → 취리히 중앙역 (Zürich HB) 이동<small>SBB 기차 약 2시간 15분 소요</small></span></li>
+          <li><span class="t">17:00</span><span class="what">취리히 숙소 체크인 (MANY'S historical city central APARTMENTS)<small>취리히 중앙역 도보 이동 & 짐 풀기</small></span></li>
+          <li><span class="t">18:00</span><span class="what">린덴호프 (Lindenhof) 언덕 올라가기 📸<small>취리히 구시가지 & 리마트 강 베스트 노을 뷰스팟 (숙소 도보 7분)</small></span></li>
+          <li><span class="t">19:00</span><span class="what">리마트 강변 (Limmatquai) & 세인트 피터 교회 야경 산책</span></li>
+          <li><span class="t">19:40</span><span class="what">취리히 구시가지 디너 & 스위스 와인 한 잔 🍷<small>신혼여행 스위스 마지막 밤 축하 디너</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="manys-stay" checked><label>취리히 숙소 1박 (MANY'S historical city central APARTMENTS) — 9/21~9/22 (체크인 14:00 / 체크아웃 11:00)</label></li>
+          <li><input type="checkbox" data-key="zurich-train" checked><label>인터라켄 오스트 → 취리히 중앙역 SBB 기차표 / 스위스 패스</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 12일차 -->
+    <section class="day" id="swiss-d12">
+      <div class="card">
+        <h2>12일차 · 9/22 (화) <span class="pill">취리히 쇼핑 & 스위스 출국</span></h2>
+        <p class="muted" style="margin:0 0 6px">취리히 쇼핑가 초콜릿 선물 구매 → 취리히 공항 이동 & 19:30 귀국 비행기 탑승</p>
+        <div id="mapSwiss-D12" class="map"></div>
+      </div>
+      <div class="card">
+        <h3>시간대별 타임라인</h3>
+        <ul class="tl">
+          <li><span class="t">09:00~</span><span class="what">취리히 여유로운 아침 & 11:00 체크아웃</span></li>
+          <li><span class="t">11:00</span><span class="what">취리히 중앙역 (Zürich HB) 이동 & 코인라커 수하물 보관<small>짐 맡기고 가볍게 쇼핑 시작</small></span></li>
+          <li><span class="t">11:30</span><span class="what">반호프슈트라세 (Bahnhofstrasse) 쇼핑가 산책 & 선물 구매 🎁<small>Sprüngli (수프렝글리) / Läderach (레더라) 스위스 명품 초콜릿 선물</small></span></li>
+          <li><span class="t">13:30</span><span class="what">리마트 강변 야외 테라스 점심 식사 & 커피 ☕</span></li>
+          <li><span class="t">15:30</span><span class="what">취리히 중앙역 짐 찾기 후 공항철도 탑승<small>취리히 공항까지 기차 약 12분 소요</small></span></li>
+          <li><span class="t">16:30</span><span class="what">취리히 국제공항 (ZRH) 도착 & 출국 수속 ✈️<small>출발 3시간 전 공항 도착 완료</small></span></li>
+          <li><span class="t">19:30</span><span class="what">스위스 현지 출발 (인천행 비행기 탑승) 🛫<small>귀국 항공편</small></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>이날 예약 항목</h3>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="swiss-flight-out" checked><label>9/22 19:30 스위스 취리히 출발 귀국 항공권 (16:30 공항 도착 완료)</label></li>
+          <li><input type="checkbox" data-key="zurich-locker"><label>취리히 중앙역 코인라커 이용 (수하물 보관)</label></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 13일차 -->
+    <section class="day" id="swiss-d13">
+      <div class="card">
+        <h2>13일차 · 9/23 (수) <span class="pill">인천 도착 (Homecoming)</span></h2>
+        <ul class="tl">
+          <li><span class="t">14:10</span><span class="what">인천 국제공항 (ICN) 도착 🛬<small>입국 심사 및 수하물 수령</small></span></li>
+          <li><span class="t">오후</span><span class="what">귀가 및 신혼여행 무사 마무리 ❤️</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 스위스 체크리스트 -->
+    <section class="day" id="swiss-chk">
+      <div class="card">
+        <h2>💡 스위스 패스 구매 타이밍 & 가이드</h2>
+        <ul class="tl">
+          <li>
+            <span class="t">스위스 패스</span>
+            <span class="what">
+              <b>스위스 트래블 패스 4일권 (9/18~9/21)</b>
+              <small>
+                • <b>구매 시점</b>: 한국에서 여행 출발 전 (출발 1~2주 전 미리 구매)<br/>
+                • <b>구매처</b>: 마이리얼트립 / 클룩 / 와그 / SBB 공식 앱 (온라인)<br/>
+                • <b>사용 방법</b>: 이메일로 받은 E-티켓(QR코드)을 스마트폰(Apple Wallet / PDF)에 저장 후, 기차/버스 검표원에게 QR코드만 제시하면 100% 무료 무제한 탑승! (현지 창구 방문 불필요)
+              </small>
+            </span>
+          </li>
+          <li>
+            <span class="t">VIP 패스</span>
+            <span class="what">
+              <b>융프라우 1일 VIP 패스 (9/19 당일용)</b>
+              <small>
+                • <b>구매 시점</b>: 9/19 (9일차) 당일 아침 산으로 출발 직전 (정상 날씨 웹캠 확인 후)<br/>
+                • <b>구매처</b>: 그린델발트 터미널 / 그린델발트 역 / 인터라켄 역 티켓 창구 (Ticket Office)<br/>
+                • <b>사용 방법</b>: 한국에서 미리 인쇄한 <b>동신항운 할인쿠폰(종이)</b>을 역 창구에 제출하며 구매 → 실물 티켓과 함께 나오는 <b>신라면 무료 교환권</b> 챙겨서 정상에서 맛있게 냠냠 🍜
+              </small>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>스위스 예약 & 패스 체크리스트</h2>
+        <p class="muted" style="margin:0 0 8px">스위스 일정 추천 패스 조합 및 주요 예약 항목 체크 상태는 자동 저장됩니다.</p>
+        <ul class="checks">
+          <li><input type="checkbox" data-key="swiss-tgv" checked><label>파리 리옹역 → 스위스 바젤 이동 기차표 (TGV Lyria 10:22 예매)</label></li>
+          <li><input type="checkbox" data-key="swiss-pass" checked><label>🎫 스위스 트래블 패스 4일권 (한국에서 출발 전 온라인 미리 구매 · QR코드 저장)</label></li>
+          <li><input type="checkbox" data-key="jungfrau-vip" checked><label>🏔 융프라우 1일 VIP 패스 (9/19 당일 아침 날씨 확인 후 현지 역 창구에서 구매)</label></li>
+          <li><input type="checkbox" data-key="dongshin-coupon" checked><label>📄 동신항운 융프라우 할인쿠폰 (신라면 무료 교환권) 한국에서 미리 인쇄/소지</label></li>
+          <li><input type="checkbox" data-key="unterseen-stay" checked><label>🛏 운터젠 숙소 2박 (Obere Gasse, Unterseen) — 9/18~9/20</label></li>
+          <li><input type="checkbox" data-key="sunstar-stay" checked><label>🛏 선스타 호텔 그린델발트 1박 (Sunstar Hotel) — 9/20~9/21</label></li>
+          <li><input type="checkbox" data-key="manys-stay" checked><label>🛏 취리히 숙소 1박 (MANY'S historical city central APARTMENTS) — 9/21~9/22</label></li>
+          <li><input type="checkbox" data-key="zurich-airport-ticket"><label>🚆 9/22 취리히 중앙역 → 취리히 공항 SBB 편도 기차표 (당일 현장 구매 · 약 CHF 6.8)</label></li>
+          <li><input type="checkbox" data-key="swiss-flight-out" checked><label>✈️ 9/22 19:30 취리히 출발 귀국 항공권 (인천 9/23 14:10 도착)</label></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <footer>마지막 업데이트 · 2026-07-19 · iOS Apple Web App 규격 준수 통합 웹앱</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  const C_KEY = 'hm_country_key';
+  const D_KEY_PREFIX = 'hm_day_key_';
+  
+  // iOS 파일 앱 미리보기(QuickLook) SecurityError 방지 인메모리 백업
+  const memoryStorage = {};
+  const safeLS = {
+    get(k){
+      try { return localStorage.getItem(k); }
+      catch(e){ return memoryStorage[k] || null; }
+    },
+    set(k,v){
+      try { localStorage.setItem(k,v); }
+      catch(e){ memoryStorage[k] = String(v); }
+    }
+  };
+
+  const tNav = document.getElementById('tripNav');
+  const cBlocks = document.querySelectorAll('.country-block');
+
+  function switchTrip(cKey){
+    if(!tNav) return;
+    tNav.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('cur', b.dataset.c === cKey);
+    });
+    cBlocks.forEach(b => {
+      b.classList.toggle('active', b.id === 'c-' + cKey);
+    });
+    safeLS.set(C_KEY, cKey);
+
+    const savedDay = safeLS.get(D_KEY_PREFIX + cKey);
+    if(savedDay) activateDay(cKey, savedDay);
+    
+    setTimeout(() => {
+      if(typeof maps !== 'undefined'){
+        Object.values(maps).forEach(m => { if(m && m.invalidateSize) m.invalidateSize(); });
+      }
+    }, 200);
+  }
+
+  if(tNav){
+    tNav.querySelectorAll('button').forEach(b => {
+      b.addEventListener('click', (e) => { e.preventDefault(); switchTrip(b.dataset.c); });
+    });
+  }
+
+  function activateDay(cKey, dKey){
+    const dNav = document.getElementById('daysNav-' + cKey);
+    if(!dNav) return;
+    dNav.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('active', b.dataset.d === dKey);
+    });
+    const cBlock = document.getElementById('c-' + cKey);
+    if(!cBlock) return;
+    cBlock.querySelectorAll('.day').forEach(d => {
+      d.classList.toggle('active', d.id === dKey);
+    });
+    safeLS.set(D_KEY_PREFIX + cKey, dKey);
+
+    setTimeout(() => {
+      if(typeof maps !== 'undefined'){
+        Object.values(maps).forEach(m => {
+          if(!m) return;
+          if(m.invalidateSize) m.invalidateSize();
+          if(m._fitBounds && m.fitBounds){ m.fitBounds(m._fitBounds, {padding:[20,20]}); }
+        });
+      }
+    }, 150);
+  }
+
+  ['uk', 'paris', 'swiss'].forEach(cKey => {
+    const dNav = document.getElementById('daysNav-' + cKey);
+    if(dNav){
+      dNav.querySelectorAll('button').forEach(b => {
+        b.addEventListener('click', (e) => { e.preventDefault(); activateDay(cKey, b.dataset.d); });
+      });
+    }
+  });
+
+  // 체크리스트 동기화 및 바인딩
+  function syncCheck(cb){
+    const k = 'chk_' + (cb.dataset.key || cb.id);
+    if(cb.parentElement) cb.parentElement.classList.toggle('done', cb.checked);
+    document.querySelectorAll('input[type=checkbox]').forEach(o => {
+      const ok = 'chk_' + (o.dataset.key || o.id);
+      if(o !== cb && ok === k){
+        o.checked = cb.checked;
+        if(o.parentElement) o.parentElement.classList.toggle('done', cb.checked);
+      }
+    });
+    safeLS.set(k, cb.checked ? '1' : '0');
+  }
+
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    const k = 'chk_' + (cb.dataset.key || cb.id);
+    const saved = safeLS.get(k);
+    if(saved !== null) cb.checked = saved === '1';
+    if(cb.parentElement) cb.parentElement.classList.toggle('done', cb.checked);
+    cb.addEventListener('change', () => syncCheck(cb));
+  });
+
+  // PINS 통합 데이터
+  const PINS = {
+    // UK
+    soho:        {ll:[51.5114,-0.1349], name:'소호 숙소 (13 Brewer Street, Flat 3, W1F 0RH)', day:'0/1/2/4/5'},
+    heathrow:    {ll:[51.4700,-0.4543], name:'히스로 공항 (Heathrow Airport)', day:'0'},
+    trafalgar:   {ll:[51.5080,-0.1281], name:'트라팔가 광장 (Trafalgar Square)', day:'1'},
+    buckingham:  {ll:[51.5014,-0.1419], name:'버킹엄 궁전 (Buckingham Palace)', day:'1'},
+    bigben:      {ll:[51.5007,-0.1246], name:'빅벤 (Big Ben)', day:'1'},
+    westminster: {ll:[51.4994,-0.1273], name:'웨스트민스터 사원 (Westminster Abbey)', day:'1'},
+    eye:         {ll:[51.5033,-0.1196], name:'런던아이 (London Eye)', day:'1'},
+    millennium:  {ll:[51.5095,-0.0985], name:'밀레니엄 브리지 (Millennium Bridge)', day:'1'},
+    stpaul:      {ll:[51.5138,-0.0984], name:'세인트폴 대성당 (St Paul’s Cathedral)', day:'1'},
+    shard:       {ll:[51.5045,-0.0865], name:'더 샤드 (The Shard)', day:'1'},
+    covent:      {ll:[51.5117,-0.1240], name:'코벤트 가든 (Covent Garden)', day:'2'},
+    oxfordcir:   {ll:[51.5154,-0.1419], name:'옥스퍼드 서커스 (Oxford Circus)', day:'2'},
+    primrose:    {ll:[51.5392,-0.1604], name:'프림로즈 힐 (Primrose Hill)', day:'2'},
+    camden:      {ll:[51.5414,-0.1426], name:'캠든 마켓 (Camden Market)', day:'2'},
+    christch:    {ll:[51.7503,-1.2557], name:'크라이스트 처치 칼리지 (Christ Church College)', day:'3'},
+    radcliffe:   {ll:[51.7536,-1.2540], name:'래드클리프 카메라 (Radcliffe Camera)', day:'3'},
+    magdalen:    {ll:[51.7517,-1.2475], name:'모들린 칼리지 (Magdalen College)', day:'3'},
+    sheldonian:  {ll:[51.7546,-1.2549], name:'셸도니언 시어터 (Sheldonian Theatre)', day:'3'},
+    stmary:      {ll:[51.7527,-1.2536], name:'세인트메리 교회 (Univ. Church of St Mary)', day:'3'},
+    carfax:      {ll:[51.7515,-1.2580], name:'카팩스 타워 (Carfax Tower)', day:'3'},
+    newcollege:  {ll:[51.7548,-1.2521], name:'뉴 칼리지 (New College)', day:'3'},
+    ashmolean:   {ll:[51.7554,-1.2606], name:'애시몰리언 박물관 (Ashmolean Museum)', day:'3'},
+    turf:        {ll:[51.7546,-1.2531], name:'터프 태번 (The Turf Tavern)', day:'3'},
+    blackwell:   {ll:[51.7544,-1.2541], name:'블랙웰 서점 (Blackwell’s Bookshop)', day:'3'},
+    punting:     {ll:[51.7505,-1.2470], name:'모들린 브리지 펀팅 (Magdalen Bridge Punting)', day:'3'},
+    towerbridge: {ll:[51.5055,-0.0754], name:'타워 브리지 (Tower Bridge)', day:'4'},
+    toweroflon:  {ll:[51.5081,-0.0759], name:'런던탑 (Tower of London)', day:'4'},
+    borough:     {ll:[51.5055,-0.0909], name:'버로우 마켓 (Borough Market)', day:'4'},
+    nottinghill: {ll:[51.5159,-0.2058], name:'노팅힐 (Notting Hill)', day:'4'},
+    portobello:  {ll:[51.5169,-0.2059], name:'포토벨로 로드 마켓 (Portobello Road Market)', day:'4'},
+    stpancras:   {ll:[51.5320,-0.1263], name:'세인트 판크라스 역 (St Pancras International)', day:'5'},
+    gdn:         {ll:[48.8809, 2.3553], name:'파리 북역 (Gare du Nord)', day:'5'},
+    paris:       {ll:[48.8466, 2.3127], name:'파리 숙소 (10 Allée Joseph Récamier, 75015)', day:'5'},
+    chinatown:   {ll:[51.5117,-0.1310], name:'차이나타운 (Chinatown)', day:'2'},
+    carnaby:     {ll:[51.5128,-0.1390], name:'카르나비 거리 (Carnaby Street)', day:'2'},
+    soutbank:    {ll:[51.5060,-0.1170], name:'사우스뱅크 (Southbank)', day:'1'},
+    themall:     {ll:[51.5042,-0.1351], name:'더 몰 (The Mall)', day:'1'},
+    stjames:     {ll:[51.5025,-0.1342], name:'세인트제임스 파크 (St James’s Park)', day:'1'},
+    paddington:  {ll:[51.5154,-0.1755], name:'패딩턴 역 (Paddington Station)', day:'3'},
+    marylebone:  {ll:[51.5226,-0.1633], name:'메릴본 역 (Marylebone Station)', day:'3'},
+    oxfordstn:   {ll:[51.7534,-1.2701], name:'옥스퍼드 역 (Oxford Railway Station)', day:'3'},
+    coveredmkt:  {ll:[51.7525,-1.2562], name:'커버드 마켓 (Covered Market)', day:'3'},
+    portmeadow:  {ll:[51.7700,-1.2756], name:'포토 메도우 (Port Meadow)', day:'3'},
+    blenheim:    {ll:[51.8412,-1.3613], name:'블레넘 궁전 (Blenheim Palace)', day:'3'},
+    pittrivers:  {ll:[51.7585,-1.2557], name:'피트 리버스 박물관 (Pitt Rivers Museum)', day:'3'},
+    natmuseum:   {ll:[51.7585,-1.2557], name:'옥스퍼드 자연사 박물관 (Oxford Univ. Museum of Natural History)', day:'3'},
+    coventgarden:{ll:[51.5117,-0.1240], name:'코벤트 가든 (Covent Garden)', day:'2'},
+    nealsyard:   {ll:[51.5141,-0.1268], name:'닐스 야드 (Neal’s Yard)', day:'2'},
+    sevendials:  {ll:[51.5142,-0.1278], name:'세븐 다이얼스 (Seven Dials)', day:'2'},
+    regentst:    {ll:[51.5121,-0.1402], name:'리젠트 스트리트 (Regent Street)', day:'2'},
+    londonbridge:{ll:[51.5050,-0.0865], name:'런던 브리지 (London Bridge)', day:'4'},
+    crownjewels: {ll:[51.5081,-0.0759], name:'왕관 보석 (Crown Jewels)', day:'4'},
+    camdenlock:  {ll:[51.5414,-0.1463], name:'캠든 록 (Camden Lock)', day:'4'},
+
+    // PARIS
+    paris_home:  {ll:[48.8466, 2.3127], name:'파리 숙소 (10 Allée Joseph Récamier, 75015 Paris)', day:'1/2/3/4'},
+    eiffel:      {ll:[48.8584, 2.2945], name:'에펠탑 (Tour Eiffel)', day:'1'},
+    champ:       {ll:[48.8556, 2.2986], name:'샹 드 마르스 (Champ-de-Mars)', day:'1'},
+    trocadero:   {ll:[48.8624, 2.2881], name:'트로카데로 광장 (Place du Trocadéro)', day:'1'},
+    birhakeim:   {ll:[48.8558, 2.2875], name:'비르 아켐 다리 (Pont de Bir-Hakeim)', day:'1'},
+    champs:      {ll:[48.8698, 2.3075], name:'샹젤리제 거리 (Avenue des Champs-Élysées)', day:'1'},
+    arc:         {ll:[48.8738, 2.2950], name:'에투알 개선문 (Arc de Triomphe)', day:'1'},
+    pantheon:    {ll:[48.8462, 2.3464], name:'팡테옹 (Panthéon)', day:'2'},
+    latin:       {ll:[48.8500, 2.3440], name:'라탱 지구 (Quartier Latin)', day:'2'},
+    luxembourg:  {ll:[48.8462, 2.3372], name:'뤽상부르 정원 (Jardin du Luxembourg)', day:'2'},
+    notredame:   {ll:[48.8530, 2.3499], name:'노트르담 대성당 (Cathédrale Notre-Dame de Paris)', day:'2'},
+    shakespeare: {ll:[48.8525, 2.3471], name:'셰익스피어 앤 컴퍼니 (Shakespeare & Company)', day:'2'},
+    saintechap:  {ll:[48.8555, 2.3450], name:'생트 샤펠 (Sainte-Chapelle)', day:'2'},
+    cite:        {ll:[48.8550, 2.3470], name:'시테섬 (Île de la Cité)', day:'2'},
+    pontneuf:    {ll:[48.8571, 2.3414], name:'퐁뇌프 다리 (Pont Neuf)', day:'2'},
+    louvre:      {ll:[48.8606, 2.3376], name:'루브르 박물관 (Musée du Louvre)', day:'2'},
+    tuileries:   {ll:[48.8635, 2.3275], name:'튀일리 정원 (Jardin des Tuileries)', day:'2'},
+    orangerie:   {ll:[48.8637, 2.3226], name:'오랑주리 미술관 (Musée de l’Orangerie)', day:'2'},
+    concorde:    {ll:[48.8656, 2.3212], name:'콩코르드 광장 (Place de la Concorde)', day:'2'},
+    abbesses:    {ll:[48.8845, 2.3385], name:'아베스 역 (Abbesses Métro)', day:'3'},
+    jetaime:     {ll:[48.8848, 2.3386], name:'사랑해 벽 (Le Mur des Je t’aime)', day:'3'},
+    amelie:      {ll:[48.8850, 2.3338], name:'아멜리 카페 (Café des Deux Moulins)', day:'3'},
+    tertre:      {ll:[48.8865, 2.3408], name:'테르트르 광장 (Place du Tertre)', day:'3'},
+    sacrecoeur:  {ll:[48.8867, 2.3431], name:'사크레쾨르 대성당 (Basilique du Sacré-Cœur)', day:'3'},
+    moulinrouge: {ll:[48.8841, 2.3322], name:'물랭 루주 (Moulin Rouge)', day:'3'},
+    marais:      {ll:[48.8570, 2.3590], name:'마레 지구 (Le Marais)', day:'3'},
+    miznon:      {ll:[48.8576, 2.3593], name:'미즈농 마레 (Miznon Marais)', day:'3'},
+    vosges:      {ll:[48.8555, 2.3655], name:'플라스 데 보주 (Place des Vosges)', day:'3'},
+    orsay:       {ll:[48.8600, 2.3266], name:'오르세 미술관 (Musée d’Orsay)', day:'3'},
+    cruise:      {ll:[48.8605, 2.3015], name:'센강 디너 크루즈 선착장 (Bateaux Parisiens)', day:'3'},
+    garedelyon:  {ll:[48.8443, 2.3744], name:'파리 리옹 역 (Gare du Lyon)', day:'4'},
+
+    // SWITZERLAND
+    basel:          {ll:[47.5474, 7.5896], name:'바젤 역 (Basel SBB)', day:'8'},
+    unterseen:     {ll:[46.6865, 7.8502], name:'운터젠 숙소 (Obere Gasse, Unterseen)', day:'8/9/10'},
+    interlakenwest:{ll:[46.6834, 7.8517], name:'인터라켄 웨스트 역 (Interlaken West)', day:'8'},
+    interlakenost: {ll:[46.6904, 7.8693], name:'인터라켄 오스트 역 (Interlaken Ost)', day:'8'},
+    iseltwald:     {ll:[46.7118, 7.9620], name:'이젤트발트 / 브리엔츠 호수 (Iseltwald)', day:'8'},
+    grindelwald:   {ll:[46.6242, 8.0414], name:'그린델발트 터미널 (Grindelwald Terminal)', day:'9'},
+    grindelwaldstn:{ll:[46.6247, 8.0340], name:'그린델발트 역 (Grindelwald Station)', day:'10'},
+    sunstar:       {ll:[46.6238, 8.0417], name:'선스타 호텔 그린델발트 (Sunstar Hotel)', day:'10/11'},
+    pfingstegg:    {ll:[46.6230, 8.0565], name:'핑슈텍 루지 (Pfingstegg Toboggan)', day:'10'},
+    maennlichen:   {ll:[46.6136, 7.9427], name:'멘리헨 (Männlichen)', day:'10'},
+    jungfraujoch:  {ll:[46.5475, 7.9824], name:'융프라우요흐 (Jungfraujoch Top of Europe)', day:'9'},
+    first:         {ll:[46.6586, 8.0560], name:'피르스트 (First)', day:'9'},
+    bort:          {ll:[46.6430, 8.0470], name:'보어트 역 (Bort Station)', day:'9'},
+    bern:          {ll:[46.9480, 7.4474], name:'베른 구시가지 (Bern Old Town)', day:'9'},
+    lauterbrunnen: {ll:[46.5935, 7.9077], name:'라우터브루넨 (Lauterbrunnen)', day:'11'},
+    staubbach:     {ll:[46.5912, 7.9065], name:'슈타우프바흐 폭포 (Staubbach Falls)', day:'11'},
+    zurichhb:      {ll:[47.3779, 8.5403], name:'취리히 중앙역 (Zürich HB)', day:'11/12'},
+    manys:         {ll:[47.3833, 8.5417], name:'MANY’S historical city central APARTMENTS', day:'11/12'},
+    lindenhof:     {ll:[47.3725, 8.5403], name:'린덴호프 언덕 (Lindenhof)', day:'11'},
+    limmat:        {ll:[47.3705, 8.5427], name:'리마트 강변 (Limmatquai)', day:'11/12'},
+    bahnhofstrasse:{ll:[47.3732, 8.5385], name:'반호프슈트라세 쇼핑가 (Bahnhofstrasse)', day:'12'},
+    zrh:           {ll:[47.4582, 8.5555], name:'취리히 국제공항 (Zürich Airport)', day:'12'},
+  };
+
+  const maps = {};
+
+  function gmapsLink(p){
+    return 'https://www.google.com/maps/search/?api=1&query=' + p.ll[0]+','+p.ll[1];
+  }
+
+  function linkifyTimelines(){
+    const norm = s => (s||'').replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
+    const entries = Object.values(PINS).map(p=>{
+      const aliases = new Set();
+      aliases.add(norm(p.name));
+      const head = p.name.split(' (')[0].trim(); if(head) aliases.add(head);
+      if(p.name.includes(' — ')){
+        p.name.split(' — ').forEach(part=>{
+          const n = norm(part); if(n) aliases.add(n);
+          const h = part.split(' (')[0].trim(); if(h) aliases.add(h);
+        });
+      }
+      const m = p.name.match(/\(([^)]+)\)/); if(m) aliases.add(m[1].trim());
+      return {p, aliases:[...aliases].filter(s=>s && s.length>=2)};
+    });
+    entries.sort((a,b)=>{
+      const al = Math.max(...a.aliases.map(s=>s.length));
+      const bl = Math.max(...b.aliases.map(s=>s.length));
+      return bl-al;
+    });
+
+    function matchPin(text){
+      if(text.includes('소호 숙소') || text.includes('소호 에어비앤비')) return PINS.soho;
+      if(text.includes('파리 숙소')) return PINS.paris_home || PINS.paris;
+      if(text.includes('운터젠 숙소')) return PINS.unterseen;
+      const cleaned = norm(text);
+      for(const {p, aliases} of entries){
+        for(const a of aliases){
+          if(cleaned.includes(a) || text.includes(a)) return p;
+        }
+      }
+      return null;
+    }
+
+    function matchAllPins(text){
+      const found = []; const seen = new Set();
+      const tryAdd = p => { if(p && !seen.has(p)){ seen.add(p); found.push(p);} };
+      let work = text;
+      for(const {p, aliases} of entries){
+        for(const a of aliases){
+          if(work.includes(a)){
+            tryAdd(p);
+            work = work.split(a).join(' '.repeat(a.length));
+            break;
+          }
+        }
+      }
+      return found;
+    }
+
+    function dirLink(from, to){
+      return 'https://www.google.com/maps/dir/?api=1'
+        +'&origin='+encodeURIComponent(from.ll.join(','))
+        +'&destination='+encodeURIComponent(to.ll.join(','))
+        +'&travelmode=walking';
+    }
+
+    function appendLink(el, href, icon, title){
+      const a = document.createElement('a');
+      a.className = 'pin-link';
+      a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.title = title; a.textContent = icon;
+      a.style.cssText = 'margin-left:6px; text-decoration:none; font-size:13px;';
+      const small = el.querySelector('small');
+      if(small) el.insertBefore(a, small); else el.appendChild(a);
+    }
+
+    document.querySelectorAll('ul.tl li .what').forEach(el=>{
+      if(el.querySelector('a.pin-link')) return;
+      let mainText = '';
+      el.childNodes.forEach(n=>{
+        if(n.nodeType===3) mainText += n.textContent;
+        else if(n.nodeName!=='SMALL') mainText += n.textContent;
+      });
+      const arrowParts = mainText.split(/[→➡]/);
+      if(arrowParts.length>=2){
+        const from = matchPin(arrowParts[arrowParts.length-2]);
+        const to   = matchPin(arrowParts[arrowParts.length-1]);
+        if(from && to && from!==to){
+          appendLink(el, dirLink(from, to), '🧭', from.name+' → '+to.name+' — 구글맵 길찾기');
+          return;
+        }
+      }
+      const found = matchAllPins(mainText);
+      found.forEach(p=>{
+        appendLink(el, gmapsLink(p), '📍', p.name + ' — 구글맵에서 열기');
+      });
+    });
+  }
+
+  function gmapsDir(keys, defaultStartKey){
+    const startPin = PINS[defaultStartKey] || PINS[keys[0]];
+    if(!startPin) return null;
+    const pts = keys.map(k=>PINS[k]).filter(p=>p && p!==startPin);
+    if(pts.length<1) return null;
+    const o = startPin.ll.join(',');
+    const d = pts[pts.length-1].ll.join(',');
+    const wp = pts.slice(0,-1).map(p=>p.ll.join(',')).join('|');
+    return 'https://www.google.com/maps/dir/?api=1'
+      +'&origin='+encodeURIComponent(o)
+      +'&destination='+encodeURIComponent(d)
+      +(wp?'&waypoints='+encodeURIComponent(wp):'');
+  }
+
+  function makeMap(id, center, zoom, keys, fitAll, startPinKey){
+    if (typeof L === 'undefined') return null;
+    const el = document.getElementById(id); if(!el) return null;
+    try {
+      const m = L.map(el, {scrollWheelZoom:false}).setView(center, zoom);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        maxZoom:19, attribution:'© OpenStreetMap'
+      }).addTo(m);
+      const grp = [];
+      keys.forEach(k=>{
+        const p = PINS[k]; if(!p) return;
+        const popup =
+          '<b>'+p.name+'</b><br/>'
+          +'<span style="color:#6b6f76;font-size:12px">Day '+p.day+'</span><br/>'
+          +'<a href="'+gmapsLink(p)+'" target="_blank" '
+          +'style="display:inline-block;margin-top:6px;padding:5px 9px;'
+          +'background:#b91c1c;color:#fff;border-radius:6px;font-weight:600;font-size:12px;text-decoration:none;">'
+          +'🗺 구글맵에서 열기</a>';
+        const mk = L.marker(p.ll).addTo(m).bindPopup(popup);
+        grp.push(mk);
+      });
+      if(fitAll && grp.length>=1){
+        const fg = L.featureGroup(grp);
+        const bounds = fg.getBounds();
+        m._fitBounds = bounds;
+        m.fitBounds(bounds, {padding:[20,20], maxZoom:15});
+      }
+      maps[id]=m;
+
+      const dirUrl = gmapsDir(keys, startPinKey);
+      if(dirUrl){
+        const btn = L.control({position:'topright'});
+        btn.onAdd = ()=>{
+          const div = L.DomUtil.create('div');
+          div.innerHTML = '<a href="'+dirUrl+'" target="_blank" '
+            +'style="background:#fff;border:1px solid #d0d0d0;border-radius:8px;'
+            +'padding:6px 10px;font-size:12px;font-weight:700;color:#b91c1c;'
+            +'box-shadow:0 1px 3px rgba(0,0,0,.15);text-decoration:none;">'
+            +'🗺 구글맵 동선</a>';
+          L.DomEvent.disableClickPropagation(div);
+          return div;
+        };
+        btn.addTo(m);
+      }
+      return m;
+    } catch(e) {
+      console.warn("Map init failed on "+id, e);
+      return null;
+    }
+  }
+
+  // -----------------------------------------------------------------
+  // 맵 초기화
+  // -----------------------------------------------------------------
+  try {
+    // UK MAPS
+    makeMap('mapUK-All',[51.51,-0.12],6,['heathrow','soho','trafalgar','buckingham','bigben','shard','nottinghill','toweroflon','camden','christch','stpancras','gdn'],true,'soho');
+    makeMap('mapUK-D1',[51.505,-0.115],14,['trafalgar','buckingham','bigben','westminster','eye','millennium','stpaul','shard'],true,'soho');
+    makeMap('mapUK-D2',[51.515,-0.16],13,['nottinghill','portobello','covent','oxfordcir','soho'],true,'soho');
+    makeMap('mapUK-D3',[51.752,-1.255],14,['oxfordstn','christch','carfax','coveredmkt','radcliffe','stmary','sheldonian','magdalen','punting','turf'],true,'oxfordstn');
+    makeMap('mapUK-D4',[51.52,-0.10],12,['borough','towerbridge','toweroflon','soho','camden'],true,'soho');
+    makeMap('mapUK-D5',[50.2,1.1],6,['stpancras','gdn','paris'],true,'stpancras');
+
+    // PARIS MAPS
+    makeMap('mapParis-All',[48.86,2.33],12,['gdn','eiffel','louvre','orsay','sacrecoeur','vosges','paris_home'],true,'paris_home');
+    makeMap('mapParis-D1',[48.86,2.30],13,['gdn','paris_home','eiffel','champ','trocadero','birhakeim','champs','arc'],true,'paris_home');
+    makeMap('mapParis-D2',[48.85,2.34],13,['pantheon','latin','luxembourg','notredame','shakespeare','saintechap','cite','pontneuf','louvre','tuileries','orangerie','concorde'],true,'pantheon');
+    makeMap('mapParis-D3',[48.87,2.34],12,['abbesses','jetaime','amelie','tertre','sacrecoeur','moulinrouge','marais','miznon','vosges','orsay','cruise'],true,'abbesses');
+    makeMap('mapParis-D4',[48.86,2.35],12,['paris_home','garedelyon','basel'],true,'paris_home');
+
+    // SWISS MAPS
+    makeMap('mapSwiss-All',[46.8,8.2],8,['basel','unterseen','jungfraujoch','first','sunstar','manys','zrh'],true,'unterseen');
+    makeMap('mapSwiss-D8',[47.1,7.7],10,['basel','interlakenwest','unterseen','interlakenost','iseltwald'],true,'basel');
+    makeMap('mapSwiss-D9',[46.6,8.0],11,['unterseen','grindelwald','jungfraujoch','first','bort'],true,'unterseen');
+    makeMap('mapSwiss-D10',[46.624,8.042],14,['grindelwaldstn','sunstar','pfingstegg'],true,'grindelwaldstn');
+    makeMap('mapSwiss-D11',[46.9,8.2],9,['grindelwald','lauterbrunnen','zurichhb','manys','lindenhof'],true,'grindelwald');
+    makeMap('mapSwiss-D12',[47.4,8.54],12,['manys','zurichhb','bahnhofstrasse','limmat','zrh'],true,'manys');
+  } catch(err) {
+    console.warn("Map init safely completed", err);
+  }
+
+  linkifyTimelines();
+
+  const savedC = safeLS.get(C_KEY) || 'uk';
+  switchTrip(savedC);
+</script>
+</body>
+</html>
