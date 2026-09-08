@@ -168,6 +168,17 @@ assert "cleanupActiveMap" in html, "Missing cleanupActiveMap function"
 assert "data-key" in html, "Missing data-key attribute for live checkbox sync"
 print("✓ Leaflet cleanupActiveMap & live checkbox sync verified")
 
+# 25. Check Timeline Place Map Links
+assert "지도 ↗" in html, "Missing place map link button text in timeline"
+assert html.count("location_on") >= 50, f"Expected at least 50 location_on icons, found {html.count('location_on')}"
+assert "https://maps.app.goo.gl/4ha3AWaDVGbiTyG58" in html, "Missing Christ Church map link"
+assert "https://maps.app.goo.gl/YmP2PP7WeX1B4Uca6" in html, "Missing Oxford Punting map link"
+assert "https://maps.app.goo.gl/viyUDpcB2fStvBdr9" in html, "Missing Champ de Mars map link"
+assert "https://maps.app.goo.gl/y6RKT6KzjU36vwKz5" in html, "Missing Unterseen stay map link"
+assert "https://maps.app.goo.gl/B8SGZUuTvtzbXYB88" in html, "Missing Jungfrau map link"
+assert "https://maps.app.goo.gl/8pWWJtCLs7mzokFU8" in html, "Missing Bahnhofstrasse map link"
+print(f"✓ Timeline place map links & {html.count('location_on')} location_on buttons verified across all days")
+
 print("\n==========================================")
-print("ALL 24 COMPREHENSIVE TESTS PASSED PERFECTLY!")
+print("ALL 25 COMPREHENSIVE TESTS PASSED PERFECTLY!")
 print("==========================================")

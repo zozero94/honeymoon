@@ -13,17 +13,45 @@ from generate_perfect_data import PINS, DAY_MAP_CONFIG, DAYS
 def render_timeline_item(it):
     hl = it.get("highlight", False)
     hl_cls = "ring-1 ring-london-crimson/30 shadow-sm" if hl else "border border-border-subtle/40"
+    
+    # Place map link
+    p = it.get("place")
+    p_html = ""
+    if p:
+        p_title = p.get("title", "지도 보기")
+        p_html = f'''
+          <a href="{p['url']}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-cream text-primary hover:bg-surface-container font-label-caps text-[11px] font-semibold border border-border-subtle/60 transition-colors">
+            <span class="material-symbols-outlined text-[13px] text-london-crimson">location_on</span>
+            <span>{p_title} 지도 ↗</span>
+          </a>
+        '''
+
+    # Voucher link
     v = it.get("voucher")
     v_html = ""
     if v:
         v_html = f'''
-        <div class="pt-1.5">
           <a href="{v['url']}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-cream text-london-crimson hover:bg-surface-container font-label-caps text-[11px] font-bold border border-london-crimson/20 transition-colors">
             <span>{v['title']}</span>
             <span class="material-symbols-outlined text-[12px]">open_in_new</span>
           </a>
+        '''
+
+    actions_html = ""
+    if p_html or v_html:
+        actions_html = f'''
+        <div class="pt-1.5 flex flex-wrap items-center gap-1.5">
+          {p_html}
+          {v_html}
         </div>
         '''
+
+    title_text = it['title']
+    if p:
+        title_html = f'''<h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug"><a href="{p['url']}" target="_blank" rel="noopener noreferrer" class="hover:text-london-crimson hover:underline transition-colors">{title_text}</a></h4>'''
+    else:
+        title_html = f'''<h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">{title_text}</h4>'''
+
     return f'''
     <div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm {hl_cls}">
       <div class="flex items-start gap-3">
@@ -35,9 +63,9 @@ def render_timeline_item(it):
         </div>
         <div class="min-w-0 flex-1 space-y-1">
           <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">{it['badge']}</span>
-          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">{it['title']}</h4>
+          {title_html}
           <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">{it['desc']}</p>
-          {v_html}
+          {actions_html}
         </div>
       </div>
     </div>
