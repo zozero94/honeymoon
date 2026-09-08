@@ -179,6 +179,28 @@ assert "https://maps.app.goo.gl/B8SGZUuTvtzbXYB88" in html, "Missing Jungfrau ma
 assert "https://maps.app.goo.gl/8pWWJtCLs7mzokFU8" in html, "Missing Bahnhofstrasse map link"
 print(f"✓ Timeline place map links & {html.count('location_on')} location_on buttons verified across all days")
 
+# 26. Check Micro-POI Precision Links (Westminster Exit 4, Westminster Bridge, etc.)
+assert "Westminster+Station+Exit+4+London" in html, "Missing Westminster Station Exit 4 precise POI link"
+assert "Westminster+Bridge+London" in html, "Missing Westminster Bridge precise POI link"
+assert "The+Anchor+Bankside+London" in html, "Missing The Anchor Bankside pub POI link"
+assert "Notting+Hill+Gate+Station+London" in html, "Missing Notting Hill Gate station POI link"
+assert "Heathrow+Central+Station" in html, "Missing Heathrow Central station POI link"
+assert "Piccadilly+Circus+Station+London" in html, "Missing Piccadilly Circus station POI link"
+assert "Pont+des+Arts+Paris" in html, "Missing Pont des Arts POI link"
+assert "Le+Souffl%C3%A9+Paris" in html, "Missing Le Souffle Paris POI link"
+assert "Le+Saint-Regis+Paris" in html, "Missing Le Saint-Regis Paris POI link"
+assert "Firstbahn+Grindelwald+Talstation" in html, "Missing Firstbahn Grindelwald Talstation POI link"
+assert "Limmatquai+Zurich" in html, "Missing Limmatquai Zurich POI link"
+assert "Zeughauskeller+Zurich" in html, "Missing Zeughauskeller Zurich POI link"
+assert "Storchen+Zurich" in html, "Missing Storchen Zurich POI link"
+print("✓ Micro-POI precision Google Maps links verified (Westminster Exit 4, Westminster Bridge, etc.)")
+
+# 27. Check Card Title Decoupling (No accidental tap navigation during scroll)
+import re
+assert not re.search(r'<h4[^>]*>\s*<a\s', html), "Found anchor tag wrapping inside h4 title (should be decoupled to dedicated button)"
+print("✓ Timeline card title decoupled from link (mobile scroll accidental tap prevented)")
+
 print("\n==========================================")
-print("ALL 25 COMPREHENSIVE TESTS PASSED PERFECTLY!")
+print("ALL 27 COMPREHENSIVE TESTS PASSED PERFECTLY!")
 print("==========================================")
+

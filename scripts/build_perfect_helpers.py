@@ -16,18 +16,20 @@ def render_timeline_item(it):
     
     # Place map link
     p = it.get("place")
+    v = it.get("voucher")
     p_html = ""
     if p:
-        p_title = p.get("title", "지도 보기")
-        p_html = f'''
-          <a href="{p['url']}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-cream text-primary hover:bg-surface-container font-label-caps text-[11px] font-semibold border border-border-subtle/60 transition-colors">
-            <span class="material-symbols-outlined text-[13px] text-london-crimson">location_on</span>
-            <span>{p_title} 지도 ↗</span>
-          </a>
-        '''
+        # Deduplicate if place url is identical to voucher url
+        if not (v and p.get("url") == v.get("url")):
+            p_title = p.get("title", "지도 보기")
+            p_html = f'''
+              <a href="{p['url']}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-surface-cream text-primary hover:bg-surface-container font-label-caps text-[11px] font-semibold border border-border-subtle/60 transition-colors">
+                <span class="material-symbols-outlined text-[13px] text-london-crimson">location_on</span>
+                <span>{p_title} 지도 ↗</span>
+              </a>
+            '''
 
     # Voucher link
-    v = it.get("voucher")
     v_html = ""
     if v:
         v_html = f'''
@@ -47,10 +49,7 @@ def render_timeline_item(it):
         '''
 
     title_text = it['title']
-    if p:
-        title_html = f'''<h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug"><a href="{p['url']}" target="_blank" rel="noopener noreferrer" class="hover:text-london-crimson hover:underline transition-colors">{title_text}</a></h4>'''
-    else:
-        title_html = f'''<h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">{title_text}</h4>'''
+    title_html = f'''<h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">{title_text}</h4>'''
 
     return f'''
     <div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm {hl_cls}">

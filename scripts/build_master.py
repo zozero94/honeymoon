@@ -29,7 +29,10 @@ paris_accordion_html = "\n".join([render_accordion_item(k, DAYS[k]) for k in par
 swiss_accordion_html = "\n".join([render_accordion_item(k, DAYS[k]) for k in swiss_days])
 
 # Load Open-Meteo Weather Service JS
-with open("/Users/kakao/.gemini/antigravity/brain/7f9a6155-fc7e-41fc-9e51-2cae9c92c5c1/scratch/weather_service.js", "r", encoding="utf-8") as f:
+import os
+scripts_dir = os.path.dirname(os.path.abspath(__file__))
+weather_js_path = os.path.join(scripts_dir, "weather_service.js")
+with open(weather_js_path, "r", encoding="utf-8") as f:
     weather_service_js = f.read()
 
 # Weather HTML snippets
