@@ -194,6 +194,58 @@
           </div>
         </div>
 
+        
+        <!-- 현지 실시간 날씨 요약 위젯 (Open-Meteo 무료 API 연동) -->
+        <div class="rounded-2xl bg-surface-container-lowest p-3.5 shadow-sm border border-border-subtle/40 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="relative flex h-2 w-2">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              </span>
+              <span class="font-bold text-primary text-[13px]">여행지 현지 실시간 날씨</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-semibold">Open-Meteo 실시간</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[11px] text-on-surface-variant">
+              <span id="weather-last-updated" class="text-[10px] opacity-80">날씨 수신 중...</span>
+              <button type="button" onclick="WeatherService.refreshAll(true)" title="날씨 새로고침" class="p-1 rounded-md hover:bg-surface-container text-on-surface-variant hover:text-primary transition-colors flex items-center">
+                <span class="material-symbols-outlined text-[14px]">refresh</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-2 text-center" id="overview-weather-cards">
+            <!-- London -->
+            <div onclick="jumpToDay('uk', 'uk-d0')" class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 cursor-pointer hover:border-primary/40 transition-colors">
+              <span class="text-[11px] font-bold text-on-surface-variant block">🇬🇧 런던</span>
+              <div id="home-weather-uk" class="text-[13px] font-bold text-primary flex items-center justify-center gap-1 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-amber-500 animate-spin">sync</span>
+                <span>--°C</span>
+              </div>
+              <span id="home-weather-desc-uk" class="text-[10.5px] text-on-surface-variant block mt-0.5">확인 중</span>
+            </div>
+            <!-- Paris -->
+            <div onclick="jumpToDay('paris', 'paris-d1')" class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 cursor-pointer hover:border-primary/40 transition-colors">
+              <span class="text-[11px] font-bold text-on-surface-variant block">🇫🇷 파리</span>
+              <div id="home-weather-paris" class="text-[13px] font-bold text-primary flex items-center justify-center gap-1 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-amber-500 animate-spin">sync</span>
+                <span>--°C</span>
+              </div>
+              <span id="home-weather-desc-paris" class="text-[10.5px] text-on-surface-variant block mt-0.5">확인 중</span>
+            </div>
+            <!-- Swiss -->
+            <div onclick="jumpToDay('swiss', 'swiss-d8')" class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 cursor-pointer hover:border-primary/40 transition-colors">
+              <span class="text-[11px] font-bold text-on-surface-variant block">🇨🇭 스위스</span>
+              <div id="home-weather-swiss" class="text-[13px] font-bold text-primary flex items-center justify-center gap-1 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-amber-500 animate-spin">sync</span>
+                <span>--°C</span>
+              </div>
+              <span id="home-weather-desc-swiss" class="text-[10.5px] text-on-surface-variant block mt-0.5">확인 중</span>
+            </div>
+          </div>
+        </div>
+
+
         <!-- 9월 캘린더 인터랙티브 그리드 -->
         <div class="rounded-2xl bg-surface-container-lowest p-4 shadow-sm border border-border-subtle/40 space-y-3">
           <div class="flex items-center justify-between">
@@ -549,6 +601,31 @@
           </div>
         </div>
 
+        
+        <!-- London Live Weather Bar -->
+        <div class="rounded-xl bg-surface-container-lowest p-3 shadow-xs border border-border-subtle/40 flex items-center justify-between text-[12px]">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="font-bold text-primary">🇬🇧 현지 실시간:</span>
+            <span id="header-weather-uk" class="text-on-surface-variant font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+              <span>런던 날씨 수신 중...</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="WeatherService.toggleMode()" id="weather-toggle-btn-uk" class="px-2 py-0.5 rounded-md bg-surface-container text-[11px] font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+              ⚡ 실시간 기온
+            </button>
+            <button type="button" onclick="WeatherService.refreshAll(true)" title="날씨 새로고침" class="p-1 rounded-md text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[15px]">refresh</span>
+            </button>
+          </div>
+        </div>
+
+
         <!-- London Day Chips Bar -->
         <div id="scroller-uk" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
           
@@ -598,9 +675,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 0 · 9/10 (목)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>런던 초가을 15°C~19°C </span>
+          <span id="weather-badge-uk-d0" onclick="WeatherService.toggleBadge('uk-d0')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d0" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d0" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d0">런던 초가을 15°C~19°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">인천 출발 · 히드로 익스프레스 쾌속 이동 & 소호 체크인</h3>
@@ -822,9 +899,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 1 · 9/11 (금)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>런던 맑음 14°C~21°C </span>
+          <span id="weather-badge-uk-d1" onclick="WeatherService.toggleBadge('uk-d1')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d1" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d1" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d1">런던 맑음 14°C~21°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">빅벤 허니문 스냅 · 런던아이 · 버로우 마켓 · 세인트폴 돔</h3>
@@ -1125,9 +1202,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 2 · 9/12 (토)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>런던 맑은 후 구름 16°C~22°C</span>
+          <span id="weather-badge-uk-d2" onclick="WeatherService.toggleBadge('uk-d2')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d2" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d2" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d2">런던 맑은 후 구름 16°C~22°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">노팅힐 파스텔 골목 · 포토벨로 마켓 · 코벤트 가든 · 포트넘 앤 메이슨</h3>
@@ -1350,9 +1427,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 3 · 9/13 (일)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>옥스퍼드 맑음 13°C~20°C </span>
+          <span id="weather-badge-uk-d3" onclick="WeatherService.toggleBadge('uk-d3')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d3" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d3" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d3">옥스퍼드 맑음 13°C~20°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">옥스퍼드 당일치기 · 오픈도어스 무료 특권 & 크라이스트 처치</h3>
@@ -1721,9 +1798,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 4 · 9/14 (월)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>런던 화창함 15°C~21°C</span>
+          <span id="weather-badge-uk-d4" onclick="WeatherService.toggleBadge('uk-d4')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d4" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d4" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d4">런던 화창함 15°C~21°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">버킹엄 근위병 교대식 · 세인트제임스파크 호수 · 트라팔가 피크닉 · 대영박물관</h3>
@@ -1992,9 +2069,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 5 · 9/15 (화)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>런던 17°C ➔ 파리 맑음 18°C~24°C</span>
+          <span id="weather-badge-uk-d5" onclick="WeatherService.toggleBadge('uk-d5')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="uk-d5" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-uk-d5" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-uk-d5">런던 17°C ➔ 파리 맑음 18°C~24°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">유로스타 9032 타고 도버 해협 통과 ➔ 파리 북역 입성</h3>
@@ -2397,6 +2474,31 @@
           </div>
         </div>
 
+        
+        <!-- Paris Live Weather Bar -->
+        <div class="rounded-xl bg-surface-container-lowest p-3 shadow-xs border border-border-subtle/40 flex items-center justify-between text-[12px]">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="font-bold text-primary">🇫🇷 현지 실시간:</span>
+            <span id="header-weather-paris" class="text-on-surface-variant font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+              <span>파리 날씨 수신 중...</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="WeatherService.toggleMode()" id="weather-toggle-btn-paris" class="px-2 py-0.5 rounded-md bg-surface-container text-[11px] font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+              ⚡ 실시간 기온
+            </button>
+            <button type="button" onclick="WeatherService.refreshAll(true)" title="날씨 새로고침" class="p-1 rounded-md text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[15px]">refresh</span>
+            </button>
+          </div>
+        </div>
+
+
         <!-- Paris Day Chips Bar -->
         <div id="scroller-paris" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
           
@@ -2444,9 +2546,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 1 · 9/15 (화)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>파리 쾌청 18°C~25°C </span>
+          <span id="weather-badge-paris-d1" onclick="WeatherService.toggleBadge('paris-d1')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="paris-d1" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-paris-d1" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-paris-d1">파리 쾌청 18°C~25°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">파리 입성 · 15구 숙소 체크인 · 에펠탑 일몰 & 개선문 야경</h3>
@@ -2654,9 +2756,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 2 · 9/16 (수)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>파리 맑음 16°C~24°C </span>
+          <span id="weather-badge-paris-d2" onclick="WeatherService.toggleBadge('paris-d2')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="paris-d2" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-paris-d2" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-paris-d2">파리 맑음 16°C~24°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">노트르담 · 라탱 카페 거리 · 루브르 14:30 슬롯 & 튀일리</h3>
@@ -2868,9 +2970,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 3 · 9/17 (목)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>베르사유 & 파리 맑음 15°C~23°C</span>
+          <span id="weather-badge-paris-d3" onclick="WeatherService.toggleBadge('paris-d3')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="paris-d3" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-paris-d3" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-paris-d3">베르사유 & 파리 맑음 15°C~23°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">베르사유 궁전 11:30 올액세스 · 마레 보주 광장 & 센강 노을</h3>
@@ -3143,9 +3245,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 4 · 9/18 (금)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>파리 16°C ➔ 스위스 알프스 쾌청 12°C~18°C</span>
+          <span id="weather-badge-paris-d4" onclick="WeatherService.toggleBadge('paris-d4')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="paris-d4" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-paris-d4" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-paris-d4">파리 16°C ➔ 스위스 알프스 쾌청 12°C~18°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">파리 리옹역 이동 ➔ TGV Lyria 9211 타고 알프스로!</h3>
@@ -3437,6 +3539,31 @@
           </a>
         </div>
 
+        
+        <!-- Swiss Live Weather Bar -->
+        <div class="rounded-xl bg-surface-container-lowest p-3 shadow-xs border border-border-subtle/40 flex items-center justify-between text-[12px]">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2 w-2">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span class="font-bold text-primary">🇨🇭 현지 실시간:</span>
+            <span id="header-weather-swiss" class="text-on-surface-variant font-medium flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+              <span>스위스 날씨 수신 중...</span>
+            </span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" onclick="WeatherService.toggleMode()" id="weather-toggle-btn-swiss" class="px-2 py-0.5 rounded-md bg-surface-container text-[11px] font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+              ⚡ 실시간 기온
+            </button>
+            <button type="button" onclick="WeatherService.refreshAll(true)" title="날씨 새로고침" class="p-1 rounded-md text-on-surface-variant hover:text-primary transition-colors">
+              <span class="material-symbols-outlined text-[15px]">refresh</span>
+            </button>
+          </div>
+        </div>
+
+
         <!-- Swiss Day Chips Bar -->
         <div id="scroller-swiss" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
           
@@ -3496,9 +3623,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 8 · 9/18 (금)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>인터라켄 맑음 12°C~19°C </span>
+          <span id="weather-badge-swiss-d8" onclick="WeatherService.toggleBadge('swiss-d8')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d8" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d8" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d8">인터라켄 맑음 12°C~19°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">스위스 입성 · 운터젠 체크인 & 이젤트발트 에메랄드 호수</h3>
@@ -3735,9 +3862,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 9 · 9/19 (토)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>융프라우요흐 영하 3°C~ 영상 2°C (만년설/패딩 필수) </span>
+          <span id="weather-badge-swiss-d9" onclick="WeatherService.toggleBadge('swiss-d9')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d9" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d9" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d9">융프라우요흐 영하 3°C~ 영상 2°C (만년설/패딩 필수)</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">융프라우요흐 정상 정복 (신라면 🍜) & 피르스트 트로티바이크</h3>
@@ -3974,9 +4101,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 10 · 9/20 (일)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>그린델발트 화창 11°C~18°C</span>
+          <span id="weather-badge-swiss-d10" onclick="WeatherService.toggleBadge('swiss-d10')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d10" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d10" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d10">그린델발트 화창 11°C~18°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">그린델발트 이동 · 선스타 호텔 (아이거 뷰) & 핑슈텍 루지</h3>
@@ -4213,9 +4340,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 11 · 9/21 (월)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>취리히 맑음 14°C~21°C</span>
+          <span id="weather-badge-swiss-d11" onclick="WeatherService.toggleBadge('swiss-d11')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d11" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d11" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d11">취리히 맑음 14°C~21°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">라우터브루넨 수직 폭포 마을 ➔ 취리히 이동 & 린덴호프 노을</h3>
@@ -4445,9 +4572,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 12 · 9/22 (화)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>취리히 15°C~22°C</span>
+          <span id="weather-badge-swiss-d12" onclick="WeatherService.toggleBadge('swiss-d12')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d12" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d12" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d12">취리히 15°C~22°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">반호프슈트라세 명품 쇼핑 & 초콜릿 구매 ➔ 취리히 공항 출국</h3>
@@ -4659,9 +4786,9 @@
       <div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm border border-border-subtle/40 space-y-2">
         <div class="flex items-center justify-between">
           <span class="px-2 py-0.5 rounded-full bg-primary-container text-on-primary font-label-caps text-[11px] font-bold">Day 13 · 9/23 (수)</span>
-          <span class="text-[11.5px] text-on-surface-variant flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">wb_sunny</span>
-            <span>서울/인천 맑음 18°C~25°C</span>
+          <span id="weather-badge-swiss-d13" onclick="WeatherService.toggleBadge('swiss-d13')" class="weather-badge text-[11.5px] text-on-surface-variant flex items-center gap-1 cursor-pointer select-none hover:text-primary transition-colors py-0.5 px-1.5 rounded-md hover:bg-surface-container/60" data-day="swiss-d13" title="탭하여 실시간 기온 ⇋ 예보 전환">
+            <span id="weather-icon-swiss-d13" class="material-symbols-outlined text-[14px] text-amber-500">wb_sunny</span>
+            <span id="weather-text-swiss-d13">서울/인천 맑음 18°C~25°C</span>
           </span>
         </div>
         <h3 class="font-title-lg text-primary font-bold text-[16px] leading-snug">인천 국제공항 안전 도착 & 신혼여행 감동 마무리 ❤️</h3>
@@ -5528,10 +5655,351 @@
       }
     }
 
+    // Open-Meteo Weather Service
+    // WeatherService: Open-Meteo Free Weather API Integration
+    // ============================================================
+    const WeatherService = (() => {
+      const LOCATIONS = {
+        London: { name: "런던", lat: 51.5074, lon: -0.1278 },
+        Oxford: { name: "옥스퍼드", lat: 51.7520, lon: -1.2577 },
+        Paris: { name: "파리", lat: 48.8566, lon: 2.3522 },
+        Versailles: { name: "베르사유", lat: 48.8049, lon: 2.1204 },
+        Interlaken: { name: "인터라켄", lat: 46.6863, lon: 7.8632 },
+        Jungfraujoch: { name: "융프라우요흐", lat: 46.5475, lon: 7.9822, elevation: 3454 },
+        Grindelwald: { name: "그린델발트", lat: 46.6247, lon: 8.0345 },
+        Zurich: { name: "취리히", lat: 47.3769, lon: 8.5417 },
+        Incheon: { name: "서울/인천", lat: 37.4602, lon: 126.4407 }
+      };
+
+      const CARD_MAP = {
+        "uk-d0": { city: "런던", loc: "London", date: "2026-09-10" },
+        "uk-d1": { city: "런던", loc: "London", date: "2026-09-11" },
+        "uk-d2": { city: "런던", loc: "London", date: "2026-09-12" },
+        "uk-d3": { city: "옥스퍼드", loc: "Oxford", date: "2026-09-13" },
+        "uk-d4": { city: "런던", loc: "London", date: "2026-09-14" },
+        "uk-d5": { city: "런던➔파리", loc: "London", loc2: "Paris", date: "2026-09-15" },
+        "paris-d1": { city: "파리", loc: "Paris", date: "2026-09-15" },
+        "paris-d2": { city: "파리", loc: "Paris", date: "2026-09-16" },
+        "paris-d3": { city: "베르사유", loc: "Versailles", date: "2026-09-17" },
+        "paris-d4": { city: "파리➔스위스", loc: "Paris", loc2: "Interlaken", date: "2026-09-18" },
+        "swiss-d8": { city: "인터라켄", loc: "Interlaken", date: "2026-09-18" },
+        "swiss-d9": { city: "융프라우요흐", loc: "Jungfraujoch", date: "2026-09-19" },
+        "swiss-d10": { city: "그린델발트", loc: "Grindelwald", date: "2026-09-20" },
+        "swiss-d11": { city: "취리히", loc: "Zurich", date: "2026-09-21" },
+        "swiss-d12": { city: "취리히", loc: "Zurich", date: "2026-09-22" },
+        "swiss-d13": { city: "서울/인천", loc: "Incheon", date: "2026-09-23" }
+      };
+
+      const weatherData = {};
+      let currentMode = SafeStorage.get("hm_weather_mode") || "live";
+      const badgeOverrides = {};
+
+      function getWmo(code) {
+        const c = Number(code);
+        if (c === 0) return { text: "맑음", icon: "wb_sunny", color: "text-amber-500" };
+        if (c === 1) return { text: "대체로 맑음", icon: "sunny", color: "text-amber-500" };
+        if (c === 2) return { text: "구름 조금", icon: "partly_cloudy_day", color: "text-sky-500" };
+        if (c === 3) return { text: "흐림", icon: "cloud", color: "text-slate-500" };
+        if (c === 45 || c === 48) return { text: "안개", icon: "foggy", color: "text-slate-400" };
+        if (c >= 51 && c <= 55) return { text: "이슬비", icon: "rainy", color: "text-blue-500" };
+        if (c >= 61 && c <= 65) return { text: "비", icon: "rainy", color: "text-blue-600" };
+        if (c >= 71 && c <= 77) return { text: "눈", icon: "weather_snowy", color: "text-cyan-500" };
+        if (c >= 80 && c <= 82) return { text: "소나기", icon: "shower", color: "text-indigo-500" };
+        if (c >= 95) return { text: "뇌우", icon: "thunderstorm", color: "text-amber-600" };
+        return { text: "맑음", icon: "wb_sunny", color: "text-amber-500" };
+      }
+
+      async function fetchLocationWeather(key, force) {
+        const loc = LOCATIONS[key];
+        if (!loc) return null;
+
+        const cacheKey = "hm_weather_cache_" + key;
+        const cacheTimeKey = "hm_weather_time_" + key;
+
+        if (!force) {
+          const cached = SafeStorage.get(cacheKey);
+          const cacheTime = SafeStorage.get(cacheTimeKey);
+          const now = Date.now();
+          if (cached && cacheTime && (now - Number(cacheTime) < 15 * 60 * 1000)) {
+            try {
+              return JSON.parse(cached);
+            } catch (_) {}
+          }
+        }
+
+        try {
+          let url = "https://api.open-meteo.com/v1/forecast?latitude=" + loc.lat + "&longitude=" + loc.lon + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min&forecast_days=16&timezone=auto";
+          if (loc.elevation) {
+            url += "&elevation=" + loc.elevation;
+          }
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          const data = await res.json();
+          SafeStorage.set(cacheKey, JSON.stringify(data));
+          SafeStorage.set(cacheTimeKey, String(Date.now()));
+          return data;
+        } catch (e) {
+          console.warn("[WeatherService] Failed to fetch for " + key, e);
+          const stale = SafeStorage.get(cacheKey);
+          if (stale) {
+            try { return JSON.parse(stale); } catch (_) {}
+          }
+          return null;
+        }
+      }
+
+      async function fetchAll(force) {
+        const keys = Object.keys(LOCATIONS);
+        const promises = keys.map(k => fetchLocationWeather(k, force));
+        const results = await Promise.all(promises);
+        keys.forEach((k, idx) => {
+          if (results[idx]) {
+            weatherData[k] = results[idx];
+          }
+        });
+        renderAll();
+      }
+
+      function renderAll() {
+        renderHeaderWidgets();
+        renderOverviewStrip();
+        renderAllCards();
+        updateToggleButtons();
+      }
+
+      function renderHeaderWidgets() {
+        const uk = weatherData["London"];
+        if (uk && uk.current) {
+          const w = getWmo(uk.current.weather_code);
+          const temp = Math.round(uk.current.temperature_2m * 10) / 10;
+          const el = document.getElementById("header-weather-uk");
+          if (el) {
+            el.innerHTML = '<span class="material-symbols-outlined text-[14px] ' + w.color + '">' + w.icon + '</span><span class="font-bold text-primary">' + temp + '°C</span><span>· ' + w.text + '</span>';
+          }
+        }
+
+        const fr = weatherData["Paris"];
+        if (fr && fr.current) {
+          const w = getWmo(fr.current.weather_code);
+          const temp = Math.round(fr.current.temperature_2m * 10) / 10;
+          const el = document.getElementById("header-weather-paris");
+          if (el) {
+            el.innerHTML = '<span class="material-symbols-outlined text-[14px] ' + w.color + '">' + w.icon + '</span><span class="font-bold text-primary">' + temp + '°C</span><span>· ' + w.text + '</span>';
+          }
+        }
+
+        const sw = weatherData["Interlaken"];
+        const jf = weatherData["Jungfraujoch"];
+        if (sw && sw.current) {
+          const w = getWmo(sw.current.weather_code);
+          const temp = Math.round(sw.current.temperature_2m * 10) / 10;
+          const jfTemp = (jf && jf.current) ? (Math.round(jf.current.temperature_2m * 10) / 10) + "°C" : "";
+          const el = document.getElementById("header-weather-swiss");
+          if (el) {
+            let jfHtml = jfTemp ? '<span class="text-secondary font-bold ml-1">· 융프라우 ' + jfTemp + '</span>' : '';
+            el.innerHTML = '<span class="material-symbols-outlined text-[14px] ' + w.color + '">' + w.icon + '</span><span class="font-bold text-primary">인터라켄 ' + temp + '°C · ' + w.text + '</span>' + jfHtml;
+          }
+        }
+      }
+
+      function renderOverviewStrip() {
+        const uk = weatherData["London"];
+        const fr = weatherData["Paris"];
+        const sw = weatherData["Interlaken"];
+
+        if (uk && uk.current) {
+          const w = getWmo(uk.current.weather_code);
+          const el = document.getElementById("home-weather-uk");
+          const desc = document.getElementById("home-weather-desc-uk");
+          if (el) el.innerHTML = '<span class="material-symbols-outlined text-[15px] ' + w.color + '">' + w.icon + '</span><span>' + (Math.round(uk.current.temperature_2m * 10) / 10) + '°C</span>';
+          if (desc) desc.textContent = "실시간 · " + w.text;
+        }
+
+        if (fr && fr.current) {
+          const w = getWmo(fr.current.weather_code);
+          const el = document.getElementById("home-weather-paris");
+          const desc = document.getElementById("home-weather-desc-paris");
+          if (el) el.innerHTML = '<span class="material-symbols-outlined text-[15px] ' + w.color + '">' + w.icon + '</span><span>' + (Math.round(fr.current.temperature_2m * 10) / 10) + '°C</span>';
+          if (desc) desc.textContent = "실시간 · " + w.text;
+        }
+
+        if (sw && sw.current) {
+          const w = getWmo(sw.current.weather_code);
+          const el = document.getElementById("home-weather-swiss");
+          const desc = document.getElementById("home-weather-desc-swiss");
+          if (el) el.innerHTML = '<span class="material-symbols-outlined text-[15px] ' + w.color + '">' + w.icon + '</span><span>' + (Math.round(sw.current.temperature_2m * 10) / 10) + '°C</span>';
+          if (desc) desc.textContent = "실시간 · " + w.text;
+        }
+
+        const updated = document.getElementById("weather-last-updated");
+        if (updated) {
+          const d = new Date();
+          const timeStr = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0");
+          updated.textContent = timeStr + " 실시간";
+        }
+      }
+
+      function getCardDisplay(dayKey, mode) {
+        const cfg = CARD_MAP[dayKey];
+        if (!cfg) return null;
+
+        const data = weatherData[cfg.loc];
+        if (!data) return null;
+
+        // Multi-destination cards (e.g. uk-d5 London->Paris, paris-d4 Paris->Swiss)
+        if (cfg.loc2) {
+          const data2 = weatherData[cfg.loc2];
+          if (mode === "live") {
+            if (data.current && data2 && data2.current) {
+              const t1 = Math.round(data.current.temperature_2m);
+              const t2 = Math.round(data2.current.temperature_2m);
+              const w2 = getWmo(data2.current.weather_code);
+              return {
+                icon: w2.icon,
+                color: w2.color,
+                text: cfg.city + " 실시간 " + t1 + "°C ➔ " + t2 + "°C · " + w2.text,
+                isLive: true
+              };
+            }
+          } else {
+            const times = data.daily ? data.daily.time : [];
+            const times2 = data2 && data2.daily ? data2.daily.time : [];
+            const idx = times.indexOf(cfg.date);
+            const idx2 = times2.indexOf(cfg.date);
+            if (idx !== -1 && idx2 !== -1 && data.daily.temperature_2m_max[idx] !== null) {
+              const t1 = Math.round(data.daily.temperature_2m_max[idx]);
+              const t2min = Math.round(data2.daily.temperature_2m_min[idx2]);
+              const t2max = Math.round(data2.daily.temperature_2m_max[idx2]);
+              const w2 = getWmo(data2.daily.weather_code[idx2]);
+              return {
+                icon: w2.icon,
+                color: w2.color,
+                text: cfg.city + " " + t1 + "°C ➔ " + t2min + "°C~" + t2max + "°C · " + w2.text,
+                isLive: false
+              };
+            }
+          }
+        }
+
+        if (mode === "live") {
+          if (data.current) {
+            const w = getWmo(data.current.weather_code);
+            const temp = Math.round(data.current.temperature_2m * 10) / 10;
+            const suffix = (dayKey === "swiss-d9") ? " (만년설/패딩)" : "";
+            return {
+              icon: w.icon,
+              color: w.color,
+              text: cfg.city + " 실시간 " + temp + "°C · " + w.text + suffix,
+              isLive: true
+            };
+          }
+        } else {
+          const times = data.daily ? data.daily.time : [];
+          const idx = times.indexOf(cfg.date);
+          if (idx !== -1 && data.daily.temperature_2m_max[idx] !== null) {
+            const tmin = Math.round(data.daily.temperature_2m_min[idx] * 10) / 10;
+            const tmax = Math.round(data.daily.temperature_2m_max[idx] * 10) / 10;
+            const w = getWmo(data.daily.weather_code[idx]);
+            const suffix = (dayKey === "swiss-d9") ? " (만년설/패딩)" : "";
+            return {
+              icon: w.icon,
+              color: w.color,
+              text: cfg.city + " " + tmin + "°C~" + tmax + "°C · " + w.text + suffix,
+              isLive: false
+            };
+          }
+        }
+
+        // Fallback to live if forecast is beyond 16 days
+        if (data.current) {
+          const w = getWmo(data.current.weather_code);
+          const temp = Math.round(data.current.temperature_2m * 10) / 10;
+          return {
+            icon: w.icon,
+            color: w.color,
+            text: cfg.city + " 실시간 " + temp + "°C · " + w.text,
+            isLive: true
+          };
+        }
+
+        return null;
+      }
+
+      function renderCard(dayKey) {
+        const textEl = document.getElementById("weather-text-" + dayKey);
+        const iconEl = document.getElementById("weather-icon-" + dayKey);
+        const badgeEl = document.getElementById("weather-badge-" + dayKey);
+        if (!textEl || !iconEl) return;
+
+        const mode = badgeOverrides[dayKey] || currentMode;
+        const res = getCardDisplay(dayKey, mode);
+        if (res) {
+          textEl.textContent = res.text;
+          iconEl.textContent = res.icon;
+          iconEl.className = "material-symbols-outlined text-[14px] " + res.color;
+          if (badgeEl) {
+            if (res.isLive) {
+              badgeEl.classList.add("text-primary", "font-medium");
+            } else {
+              badgeEl.classList.remove("text-primary", "font-medium");
+            }
+          }
+        }
+      }
+
+      function renderAllCards() {
+        Object.keys(CARD_MAP).forEach(k => renderCard(k));
+      }
+
+      function toggleMode() {
+        currentMode = (currentMode === "live") ? "forecast" : "live";
+        SafeStorage.set("hm_weather_mode", currentMode);
+        for (const k in badgeOverrides) delete badgeOverrides[k];
+        renderAllCards();
+        updateToggleButtons();
+      }
+
+      function toggleBadge(dayKey) {
+        const cur = badgeOverrides[dayKey] || currentMode;
+        badgeOverrides[dayKey] = (cur === "live") ? "forecast" : "live";
+        renderCard(dayKey);
+      }
+
+      function updateToggleButtons() {
+        ["uk", "paris", "swiss"].forEach(c => {
+          const btn = document.getElementById("weather-toggle-btn-" + c);
+          if (btn) {
+            if (currentMode === "live") {
+              btn.innerHTML = '<span>⚡ 실시간 기온</span> <span class="text-[9.5px] opacity-75">⇋ 예보</span>';
+              btn.classList.add("bg-primary/10", "text-primary");
+            } else {
+              btn.innerHTML = '<span>📅 일정별 예보</span> <span class="text-[9.5px] opacity-75">⇋ 실시간</span>';
+              btn.classList.remove("bg-primary/10", "text-primary");
+            }
+          }
+        });
+      }
+
+      return {
+        init() {
+          fetchAll(false);
+        },
+        refreshAll(force = true) {
+          const updated = document.getElementById("weather-last-updated");
+          if (updated) updated.textContent = "갱신 중...";
+          fetchAll(force);
+        },
+        toggleMode,
+        toggleBadge
+      };
+    })();
+
+
     // App Initialization
     document.addEventListener("DOMContentLoaded", () => {
       updateDDay();
       initCheckboxes();
+      WeatherService.init();
 
       // Restore active tab
       const savedTab = AppStore.getActiveTab();
