@@ -1,1 +1,4 @@
 .DS_Store
+versions/
+*.pyc
+__pycache__/

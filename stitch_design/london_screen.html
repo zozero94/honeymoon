@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><title>Grand Tour Honeymoon</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-highest": "#e0e2e9", "surface-container-high": "#e5e8ef", "border-strong": "#D5D2C7", "surface-container": "#ebeef5", "inverse-surface": "#2d3136", "on-error": "#ffffff", "on-error-container": "#93000a", "on-tertiary-fixed": "#3c0700", "tertiary": "#240300", "surface-container-low": "#f1f4fa", "on-primary": "#ffffff", "on-primary-container": "#808b9f", "outline": "#75777d", "london-crimson": "#9B2226", "surface-bright": "#f7f9ff", "tertiary-fixed": "#ffdad2", "secondary-fixed": "#d1e9d1", "on-secondary-fixed": "#0c1f11", "error": "#ba1a1a", "on-tertiary": "#ffffff", "primary-container": "#192434", "secondary-container": "#d1e9d1", "surface-variant": "#e0e2e9", "on-tertiary-container": "#cd715a", "tertiary-fixed-dim": "#ffb4a2", "alpine-ice": "#EAF0F2", "canvas-ivory": "#FAFAF7", "surface-dim": "#d7dae1", "surface-card": "#FFFFFF", "inverse-on-surface": "#eef1f8", "on-secondary": "#ffffff", "outline-variant": "#c5c6cd", "parisian-rose": "#E8A598", "primary-fixed": "#d8e3f9", "on-surface": "#181c21", "on-secondary-fixed-variant": "#374c3a", "primary-fixed-dim": "#bcc7dc", "on-tertiary-fixed-variant": "#79301e", "background": "#f7f9ff", "error-container": "#ffdad6", "on-surface-variant": "#44474c", "on-primary-fixed-variant": "#3c4759", "surface-cream": "#F4F2EC", "secondary": "#4f6351", "inverse-primary": "#bcc7dc", "border-subtle": "#E8E6DF", "primary": "#040e1d", "on-background": "#181c21", "surface-container-lowest": "#ffffff", "on-primary-fixed": "#111c2c", "surface-tint": "#545f71", "on-secondary-container": "#556a57", "tertiary-container": "#490d01", "secondary-fixed-dim": "#b5cdb6", "surface": "#f7f9ff" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "space-xs": "0.5rem", "gutter-desktop": "2rem", "space-3xl": "4.5rem", "space-2xs": "0.25rem", "container-max": "1280px", "gutter-mobile": "1rem", "space-sm": "0.75rem", "space-lg": "1.5rem", "space-md": "1rem", "space-xl": "2rem", "space-2xl": "3rem" }, fontFamily: { "display-hero-mobile": ["Playfair Display", "serif"], "headline-lg": ["Playfair Display", "serif"], "display-hero": ["Playfair Display", "serif"], "headline-md": ["Playfair Display", "serif"], "title-lg": ["Plus Jakarta Sans", "sans-serif"], "label-caps": ["Plus Jakarta Sans", "sans-serif"], "body-sm": ["Plus Jakarta Sans", "sans-serif"], "headline-lg-mobile": ["Playfair Display", "serif"], "label-md": ["Plus Jakarta Sans", "sans-serif"], "body-md": ["Plus Jakarta Sans", "sans-serif"], "headline-sm": ["Playfair Display", "serif"], "body-lg": ["Plus Jakarta Sans", "sans-serif"], "label-sm": ["Plus Jakarta Sans", "sans-serif"], "title-md": ["Plus Jakarta Sans", "sans-serif"] }, fontSize: { "display-hero-mobile": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.015em", "fontWeight": "500" }], "display-hero": ["56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "headline-md": ["28px", { "lineHeight": "36px", "fontWeight": "500" }], "title-lg": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "label-md": ["13px", { "lineHeight": "18px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-sm": ["22px", { "lineHeight": "28px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }] } } } }</script><style>@layer base{html,body{width:100%;margin:0;padding:0;}body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-screen selection:bg-parisian-rose selection:text-primary"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-20 px-gutter-mobile flex items-center justify-between"><div class="flex flex-col justify-center min-w-0 pr-space-xs"><span class="font-label-caps text-label-caps uppercase text-london-crimson tracking-wider truncate">Grand Tour Honeymoon</span><h1 class="font-headline-sm text-headline-sm text-primary tracking-tight truncate leading-tight">London, UK · 5 Nights</h1><div class="flex items-center gap-space-2xs"><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">2026.09.10 - 09.15</span><span class="w-1 h-1 rounded-full bg-parisian-rose"></span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">London Itinerary</span></div></div><div class="flex items-center gap-space-2xs shrink-0"><button aria-label="Search itinerary" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary active:bg-surface-cream transition-colors"><span class="material-symbols-outlined text-[22px]">search</span></button><button aria-label="Share trip details" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary active:bg-surface-cream transition-colors"><span class="material-symbols-outlined text-[20px]">ios_share</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 ml-space-2xs shadow-sm"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-20 pb-24 bg-surface min-h-screen"><div class="flex flex-col w-full px-gutter-mobile space-y-space-lg pb-12">
+<!-- TOP HERO CARD: LONDON CHAPTER -->
+<section class="relative w-full rounded-xl bg-surface-container-lowest p-space-lg shadow-sm overflow-hidden border-none">
+<!-- Subtle Ambient Glow -->
+<div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-parisian-rose/15 blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-cream text-london-crimson font-label-caps text-[10px] tracking-wider uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-london-crimson"></span>
+          🇬🇧 PART 1 · UNITED KINGDOM · 5N 6D
+        </span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-[11px] font-semibold">
+          D-Day 카운트다운
+        </span>
+</div>
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight">로맨틱 클래식 런던</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-london-crimson">calendar_today</span>
+          2026.09.10 (목) → 09.15 (화) · 성인 2인 허니문
+        </p>
+</div>
+<!-- Basecamp Info Box -->
+<div class="w-full rounded-lg bg-surface-cream/80 p-space-sm flex flex-col space-y-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[18px] text-london-crimson">hotel</span>
+<span>소호 에어비앤비 (Soho 4박)</span>
+</div>
+<span class="font-label-caps text-[10px] text-secondary font-bold uppercase bg-surface-container-lowest px-1.5 py-0.5 rounded">체크인 19:30</span>
+</div>
+<p class="font-body-sm text-[12px] text-on-surface-variant flex items-center gap-1 leading-snug">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+          피카딜리 서커스역 도보 3분 (250m) · 센트럴 &amp; 베이컬루 라인
+        </p>
+</div>
+<!-- Quick Action Voucher Chips -->
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1">
+<a class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm shadow-sm active:scale-95 transition-transform" href="https://maps.app.goo.gl/HgzY8MYKiXMj9bEU8" target="_blank">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+          소호 숙소 길찾기
+        </a>
+<a class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-cream text-on-surface font-label-sm text-label-sm active:scale-95 transition-transform" href="https://www.myrealtrip.com/reservations/EXP-20260809-00014349" target="_blank">
+<span class="material-symbols-outlined text-[14px] text-london-crimson">photo_camera</span>
+          스냅 바우처
+        </a>
+<a class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-cream text-on-surface font-label-sm text-label-sm active:scale-95 transition-transform" href="https://www.klook.com" target="_blank">
+<span class="material-symbols-outlined text-[14px] text-secondary">confirmation_number</span>
+          클룩 패스 3종
+        </a>
+<a class="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-cream text-on-surface font-label-sm text-label-sm active:scale-95 transition-transform" href="https://www.eurostar.com" target="_blank">
+<span class="material-symbols-outlined text-[14px]">train</span>
+          유로스타 티켓
+        </a>
+</div>
+</div>
+</section>
+<!-- DAY SELECTOR STRIP (Interactive Tabs) -->
+<section class="w-full flex flex-col space-y-2">
+<div class="flex items-center justify-between px-0.5">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Itinerary Schedule</span>
+<span class="font-label-sm text-label-sm text-london-crimson font-medium">총 6개 일정</span>
+</div>
+<!-- Scroller -->
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="dayTabScroller">
+<!-- Day 0 -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center" id="tab-btn-0" onclick="switchDayTab(0)">
+<span class="font-label-caps text-[10px] tracking-wider text-on-surface-variant">0일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5">9/10 목</span>
+<span class="text-[10px] text-on-surface-variant truncate w-full mt-0.5">런던 입국</span>
+</button>
+<!-- Day 1 (Active) -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[78px] px-3.5 py-2 rounded-lg bg-primary-container text-on-primary transition-all shadow-sm text-center relative ring-offset-2" id="tab-btn-1" onclick="switchDayTab(1)">
+<span class="font-label-caps text-[10px] tracking-wider text-parisian-rose">★ 1일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5 text-on-primary">9/11 금</span>
+<span class="text-[10px] text-parisian-rose truncate w-full mt-0.5 font-medium">스냅&amp;아이</span>
+<span class="w-1.5 h-1.5 rounded-full bg-parisian-rose absolute -bottom-1"></span>
+</button>
+<!-- Day 2 -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center" id="tab-btn-2" onclick="switchDayTab(2)">
+<span class="font-label-caps text-[10px] tracking-wider text-on-surface-variant">2일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5">9/12 토</span>
+<span class="text-[10px] text-on-surface-variant truncate w-full mt-0.5">노팅힐&amp;마켓</span>
+</button>
+<!-- Day 3 -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center" id="tab-btn-3" onclick="switchDayTab(3)">
+<span class="font-label-caps text-[10px] tracking-wider text-on-surface-variant">3일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5">9/13 일</span>
+<span class="text-[10px] text-on-surface-variant truncate w-full mt-0.5">옥스퍼드</span>
+</button>
+<!-- Day 4 -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center" id="tab-btn-4" onclick="switchDayTab(4)">
+<span class="font-label-caps text-[10px] tracking-wider text-on-surface-variant">4일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5">9/14 월</span>
+<span class="text-[10px] text-on-surface-variant truncate w-full mt-0.5">버킹엄 교대</span>
+</button>
+<!-- Day 5 -->
+<button class="shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center" id="tab-btn-5" onclick="switchDayTab(5)">
+<span class="font-label-caps text-[10px] tracking-wider text-on-surface-variant">5일차</span>
+<span class="font-title-md text-[13px] font-bold mt-0.5">9/15 화</span>
+<span class="text-[10px] text-on-surface-variant truncate w-full mt-0.5">유로스타(파리)</span>
+</button>
+</div>
+</section>
+<!-- HIGHLIGHT SUMMARY FOR SELECTED DAY 1 -->
+<section class="w-full rounded-xl bg-gradient-to-br from-surface-container-lowest via-surface-container-low to-alpine-ice/40 p-space-md shadow-sm">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="inline-flex items-center gap-1 text-london-crimson font-label-caps text-label-caps uppercase tracking-wider">
+<span class="material-symbols-outlined text-[15px]">verified</span>
+          Day 1 Golden Route
+        </div>
+<h3 class="font-headline-sm text-headline-sm text-primary">스냅 촬영 &amp; 런던아이 &amp; 세인트폴</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">웨스트민스터 사원부터 템스 강변을 따라 사우스뱅크와 버로우 마켓까지 걷는 런던 대표 코스</p>
+</div>
+<!-- Weather Badge -->
+<div class="shrink-0 flex flex-col items-end pl-2">
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-cream text-primary font-label-sm text-[12px] font-medium shadow-xs">
+<span class="material-symbols-outlined text-[16px] text-amber-500">wb_sunny</span>
+<span>맑음 19°C</span>
+</div>
+<span class="font-label-sm text-[10px] text-secondary mt-1 font-semibold">스냅 촬영 최적 🌤️</span>
+</div>
+</div>
+</section>
+<!-- DAY 1 TIMELINE (Interactive & Highly Rich) -->
+<section class="w-full flex flex-col space-y-3">
+<div class="flex items-center justify-between px-0.5">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Chronological Schedule</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">총 8개 여정</span>
+</div>
+<!-- Timeline List -->
+<div class="space-y-3 relative">
+<!-- Item 1: 08:00 숙소 출발 -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all hover:shadow-md">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-primary font-bold">08:00</span>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center mt-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">subway</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-1.5 py-0.5 rounded bg-surface-cream text-on-surface-variant font-label-caps text-[10px] uppercase font-semibold">이동 소요 15분</span>
+<span class="text-on-surface-variant font-label-sm text-[11px]">Bakerloo → Jubilee Line</span>
+</div>
+<h4 class="font-title-md text-title-md text-primary leading-tight">소호 숙소 출발 → 빅벤 이동</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">피카딜리 서커스역에서 승차 후 Westminster역 하차. 출구 나오자마자 거대한 빅벤 타워와 조우.</p>
+</div>
+</div>
+</div>
+<!-- Item 2: 08:30 허니문 스냅 (HIGHLIGHT / RESERVED) -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm ring-1 ring-london-crimson/20 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-parisian-rose/10 rounded-bl-full pointer-events-none"></div>
+<div class="flex items-start gap-3 relative z-10">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-london-crimson font-bold">08:30</span>
+<div class="w-8 h-8 rounded-full bg-london-crimson text-on-primary flex items-center justify-center mt-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</div>
+<span class="font-label-caps text-[9px] text-london-crimson font-bold mt-1">60 MIN</span>
+</div>
+<div class="min-w-0 flex-1 space-y-1.5">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-london-crimson text-on-primary font-label-caps text-[10px] font-bold uppercase">
+                ★ 예약 확정
+              </span>
+<span class="px-1.5 py-0.5 rounded bg-surface-cream text-london-crimson font-label-sm text-[11px] font-medium">마이리얼트립 1시간 코스</span>
+</div>
+<h4 class="font-headline-sm text-[17px] text-primary leading-tight">둘만의 허니문 스냅 야외 촬영 📷</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              빅벤 시계탑 아래, 웨스트민스터 브리지, 붉은 공중전화 박스, 세인트 제임스 파크 녹지 알짜 코스. 아침 황금빛 햇살 속 촬영.
+            </p>
+<!-- Curated Photo Note Box -->
+<div class="rounded-lg bg-surface-cream/80 p-2.5 flex items-start gap-2">
+<span class="material-symbols-outlined text-parisian-rose text-[18px] shrink-0 mt-0.5">tips_and_updates</span>
+<div class="font-body-sm text-[12px] text-on-surface-variant leading-snug">
+<span class="font-bold text-primary">미팅 팁:</span> Westminster역 4번 출구 앞 시계탑 조형물 앞 대기. 편한 플랫슈즈 지참 추천.
+              </div>
+</div>
+<!-- Action Button -->
+<div class="pt-1">
+<a class="inline-flex items-center gap-1.5 text-london-crimson font-label-sm text-[12px] font-bold hover:underline" href="https://www.myrealtrip.com/reservations/EXP-20260809-00014349" target="_blank">
+<span>예약 바우처 &amp; 작가 연락처 확인</span>
+<span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3: 09:45 모닝커피 & 다리 산책 -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-primary font-bold">09:45</span>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center mt-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">local_cafe</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1">
+<span class="px-1.5 py-0.5 rounded bg-surface-cream text-on-surface-variant font-label-caps text-[10px] uppercase font-semibold">휴식 &amp; 티타임</span>
+<h4 class="font-title-md text-title-md text-primary leading-tight">웨스트민스터 브리지 모닝커피 &amp; 이동</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">템스강변 로컬 카페에서 따뜻한 플랫화이트 한 잔. 강 건너 런던아이 탑승 피어로 도보 산책 (약 10분 소요).</p>
+</div>
+</div>
+</div>
+<!-- Item 4: 10:30 런던아이 탑승 (FAST TRACK CONFIRMED) -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-secondary font-bold">10:30</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mt-1.5">
+<span class="material-symbols-outlined text-[18px]">attractions</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1.5">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-secondary text-on-secondary font-label-caps text-[10px] font-bold uppercase">
+                클룩 패스 확정
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant font-mono">예약번호: QKZ212209</span>
+</div>
+<h4 class="font-title-md text-title-md text-primary leading-tight">🎡 런던아이 (London Eye) 관람 캡슐 탑승</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">10:30 지정 슬롯 입장. 30분간 회전하며 런던 시내와 빅벤, 세인트폴, 더 샤드까지 360도 가을 파노라마 조망.</p>
+<div class="flex items-center gap-2 pt-0.5">
+<a class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-cream text-primary font-label-sm text-[11px] font-semibold active:bg-surface-container" href="https://www.klook.com" target="_blank">
+<span class="material-symbols-outlined text-[13px]">qr_code</span> 모바일 E-티켓 제시
+              </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 5: 12:00 버로우 마켓 (FOOD TOUR) -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-primary font-bold">12:00</span>
+<div class="w-8 h-8 rounded-full bg-surface-cream text-london-crimson flex items-center justify-center mt-1.5">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1.5">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-caps text-[10px] font-bold uppercase">
+                금요 전 매장 오픈 DAY
+              </span>
+<span class="text-on-surface-variant font-label-sm text-[11px]">Borough Market</span>
+</div>
+<h4 class="font-title-md text-title-md text-primary leading-tight">버로우 마켓 푸드 투어 &amp; 신혼 브런치 🥐</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              런던에서 가장 활기찬 1000년 역사 미식 시장. 리처드 호손 표고버섯 리조또, 대형 팬 해산물 파에야, 오이스터 바, 몬머스 커피(Monmouth) 플랫화이트 테이크아웃.
+            </p>
+<div class="p-2 rounded bg-surface-cream/60 flex items-center justify-between text-[11px] font-label-sm text-on-surface-variant">
+<span>💡 추천 메뉴: 버섯 리조또 &amp; 솔트비프 베이글</span>
+<span class="text-london-crimson font-medium">인기 코너 대기 10분</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 6: 13:30 세인트폴 대성당 (CONFIRMED) -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-primary font-bold">13:30</span>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center mt-1.5 text-primary">
+<span class="material-symbols-outlined text-[18px]">church</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1.5">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-primary text-on-primary font-label-caps text-[10px] font-bold uppercase">
+                클룩 예약 확정
+              </span>
+<span class="font-label-sm text-[11px] text-on-surface-variant font-mono">예약: EYY349639</span>
+</div>
+<h4 class="font-title-md text-title-md text-primary leading-tight">⛪ 세인트폴 대성당 &amp; 돔 528계단 전망대</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">밀레니엄 브리지를 도보로 건너 진입. 웅장한 대성당 내부 감상 후 황금 회랑(Golden Gallery) 돔 상부에서 런던 스카이라인 조망.</p>
+</div>
+</div>
+</div>
+<!-- Item 7: 16:00 타워브리지 & 런던탑 산책 -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-primary font-bold">16:00</span>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center mt-1.5 text-on-surface">
+<span class="material-symbols-outlined text-[18px]">video_file</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1">
+<span class="px-1.5 py-0.5 rounded bg-surface-cream text-on-surface-variant font-label-caps text-[10px] uppercase font-semibold">포토존 산책</span>
+<h4 class="font-title-md text-title-md text-primary leading-tight">🌉 타워 브리지 &amp; 런던탑 외관 산책</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">포터스 필즈 공원(Potters Fields Park) 잔디밭에서 타워브리지를 배경으로 커플 사진 남기기. 내부 대기 없이 야외 감상에 집중.</p>
+</div>
+</div>
+</div>
+<!-- Item 8: 17:00 더 샤드 외관 & 캄라 펍 -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-start gap-3">
+<div class="flex flex-col items-center shrink-0 w-12 text-center pt-0.5">
+<span class="font-label-md text-label-md text-tertiary-container font-bold">17:00</span>
+<div class="w-8 h-8 rounded-full bg-surface-cream text-tertiary-container flex items-center justify-center mt-1.5">
+<span class="material-symbols-outlined text-[18px]">sports_bar</span>
+</div>
+</div>
+<div class="min-w-0 flex-1 space-y-1.5">
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="px-2 py-0.5 rounded bg-tertiary-container text-on-tertiary font-label-caps text-[10px] font-bold uppercase">
+                로컬 펍 나이트
+              </span>
+<span class="text-on-surface-variant font-label-sm text-[11px]">Sunset &amp; Pint</span>
+</div>
+<h4 class="font-title-md text-title-md text-primary leading-tight">더 샤드 노을 &amp; CAMRA 펍 캐스크 에일 🍺</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              초고층 더 샤드 외관과 템스강의 노을을 감상하며 런던 브리지 인근 역사적인 전통 펍(The George 등) 방문. 전통 방식 펌프로 따르는 살아있는 리얼 에일 시음 후 소호 복귀.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5-DAY SUMMARY ACCORDION CARDS (DAY 0, 2, 3, 4, 5) -->
+<section class="w-full flex flex-col space-y-space-sm pt-2">
+<div class="flex items-center justify-between px-0.5">
+<h3 class="font-headline-sm text-headline-sm text-primary">런던 전 일정 브리핑</h3>
+<span class="font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider">TAP TO EXPAND</span>
+</div>
+<!-- Day 0 Accordion -->
+<details class="group rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="px-2 py-1 rounded bg-surface-cream font-label-caps text-[11px] font-bold text-primary">Day 0 · 9/10 (목)</span>
+<span class="font-title-md text-[14px] text-primary truncate">입국 &amp; 히드로 익스프레스 &amp; 소호</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-3 pt-3 border-t-0 space-y-2 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-start gap-2">
+<span class="font-bold text-primary shrink-0">10:55 - 17:20</span>
+<span>인천 출발 → 런던 히드로(LHR) 터미널 도착 및 e-Gate 자동입국심사 완료</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-bold text-primary shrink-0">18:30 (15분)</span>
+<span>히드로 익스프레스 직통 탑승 → 패딩턴역 도착 (클룩 런던패스 1번째 이용)</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-bold text-primary shrink-0">19:30</span>
+<span>소호 에어비앤비 체크인, 짐 풀고 인근 로컬 펍에서 피시앤칩스 &amp; 생맥주 시차 적응</span>
+</div>
+</div>
+</details>
+<!-- Day 2 Accordion -->
+<details class="group rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="px-2 py-1 rounded bg-surface-cream font-label-caps text-[11px] font-bold text-primary">Day 2 · 9/12 (토)</span>
+<span class="font-title-md text-[14px] text-primary truncate">노팅힐 파스텔 골목 &amp; 코벤트가든</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-3 pt-3 border-t-0 space-y-2 text-on-surface-variant font-body-sm text-body-sm">
+<p class="leading-relaxed">
+          토요일 오전 메인 오픈인 <strong>포토벨로 로드 앤틱 마켓</strong> 탐방. 노팅힐 서점과 파스텔톤 주택가에서 신혼 셀프 스냅 촬영 후, 오후 코벤트 가든 닐스 야드(Neal’s Yard) 및 리젠트 스트리트 쇼핑.
+        </p>
+<div class="flex items-center gap-1.5 text-[11px] text-london-crimson font-medium pt-1">
+<span class="material-symbols-outlined text-[15px]">favorite</span>
+<span>포토벨로 로드 마켓 길거리 스트릿푸드 및 빈티지 소품 탐방 권장</span>
+</div>
+</div>
+</details>
+<!-- Day 3 Accordion -->
+<details class="group rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="px-2 py-1 rounded bg-surface-cream font-label-caps text-[11px] font-bold text-secondary">Day 3 · 9/13 (일)</span>
+<span class="font-title-md text-[14px] text-primary truncate">옥스퍼드 당일치기 &amp; 사공 펀팅</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-3 pt-3 border-t-0 space-y-2 text-on-surface-variant font-body-sm text-body-sm">
+<p class="leading-relaxed">
+          패딩턴역에서 기차로 1시간 소요. 해리포터 식당 배경인 <strong>크라이스트 처치 칼리지</strong>(11:30 입장 권장), 벤스쿠키 본점, 래드클리프 카메라 감상.
+        </p>
+<div class="p-2.5 rounded bg-surface-cream/80 flex flex-col space-y-1">
+<span class="font-bold text-primary text-[12px]">🛶 모들린 브리지 사공 펀팅 (15:30 예약 예정)</span>
+<span class="text-[11px]">전문 사공이 노를 저어주는 30분 낭만 보트 (£50). 강변 버드나무 아래 인생샷.</span>
+</div>
+</div>
+</details>
+<!-- Day 4 Accordion -->
+<details class="group rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="px-2 py-1 rounded bg-surface-cream font-label-caps text-[11px] font-bold text-primary">Day 4 · 9/14 (월)</span>
+<span class="font-title-md text-[14px] text-primary truncate">버킹엄 교대식 &amp; 트라팔가 피크닉</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-3 pt-3 border-t-0 space-y-2 text-on-surface-variant font-body-sm text-body-sm">
+<p class="leading-relaxed">
+          10:30 도착하여 버킹엄 궁전 근위병 교대식(11:00 시작) 명당 선점 관람 💂‍♂️. 관람 후 더 몰 산책로를 지나 <strong>트라팔가 광장 분수대 앞 돗자리 피크닉 🥪</strong> (샌드위치 &amp; 커피 여유).
+        </p>
+<span class="inline-block text-[11px] text-on-surface-variant bg-surface-cream px-2 py-1 rounded">
+          내일 유로스타 파리행 대비 저녁 짐 1차 정리 (수하물 규정 점검)
+        </span>
+</div>
+</details>
+<!-- Day 5 Accordion -->
+<details class="group rounded-xl bg-surface-container-lowest p-space-md shadow-sm transition-all">
+<summary class="flex items-center justify-between cursor-pointer list-none">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="px-2 py-1 rounded bg-parisian-rose/20 font-label-caps text-[11px] font-bold text-london-crimson">Day 5 · 9/15 (화)</span>
+<span class="font-title-md text-[14px] text-primary truncate">유로스타 탑승 → 파리 입성</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="mt-3 pt-3 border-t-0 space-y-2 text-on-surface-variant font-body-sm text-body-sm">
+<div class="flex items-start gap-2">
+<span class="font-bold text-primary shrink-0">12:15</span>
+<span>런던 세인트 판크라스 인터내셔널 역 도착 (출발 75분 전 출국심사 대기)</span>
+</div>
+<div class="flex items-start gap-2">
+<span class="font-bold text-primary shrink-0">13:31 → 16:59</span>
+<span>유로스타 9128호 탑승, 해저터널 건너 프랑스 파리 북역(Gare du Nord) 도착</span>
+</div>
+<div class="p-2 rounded bg-surface-cream text-[11px] text-on-surface-variant">
+          💼 수하물 규정: 1인당 대형 캐리어 2개 + 핸드백 1개 (각 75cm 이내 라벨 부착 필수)
+        </div>
+</div>
+</details>
+</section>
+<!-- ESSENTIAL LOCAL TIPS & CHECKLIST -->
+<section class="w-full flex flex-col space-y-space-sm pt-2">
+<div class="flex items-center justify-between px-0.5">
+<h3 class="font-headline-sm text-headline-sm text-primary">런던 여행 꿀팁 &amp; 체크리스트</h3>
+<span class="font-label-caps text-label-caps text-secondary font-bold">READY TO GO</span>
+</div>
+<!-- 4 Essential Tip Cards Grid -->
+<div class="grid grid-cols-1 gap-2.5">
+<!-- Tip 1: Contactless Transit -->
+<div class="rounded-xl bg-surface-container-lowest p-space-sm shadow-sm flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-cream flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[20px]">contactless</span>
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-label-md text-label-md text-primary font-bold">오이스터 카드 불필요 (컨택리스 결제)</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant mt-0.5 leading-snug">
+            트래블로그 / 트래블월렛 카드로 튜브(지하철) 및 2층 버스 태그만 하면 1일 최대 상한선(Daily Cap) 자동 적용. 동일 카드로 1인 1매 사용 필수!
+          </p>
+</div>
+</div>
+<!-- Tip 2: CAMRA Real Ale -->
+<div class="rounded-xl bg-surface-container-lowest p-space-sm shadow-sm flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-cream flex items-center justify-center shrink-0 text-london-crimson">
+<span class="material-symbols-outlined text-[20px]">sports_bar</span>
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-label-md text-label-md text-primary font-bold">CAMRA 인증 펍 · 캐스크 에일 (Cask Ale)</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant mt-0.5 leading-snug">
+            펍 입구의 ‘CAMRA’ 마크를 확인하세요. 인공 탄산이 아닌 통에서 자연 숙성된 전통 영국식 맥주로 깊은 향과 부드러운 목넘김을 경험할 수 있습니다.
+          </p>
+</div>
+</div>
+<!-- Tip 3: UK Plug Adapter -->
+<div class="rounded-xl bg-surface-container-lowest p-space-sm shadow-sm flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-cream flex items-center justify-center shrink-0 text-secondary">
+<span class="material-symbols-outlined text-[20px]">power</span>
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-label-md text-label-md text-primary font-bold">영국 전용 BF타입 3구 어댑터</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant mt-0.5 leading-snug">
+            유럽 2구 플러그와 다릅니다. 각진 세 개의 핀이 달린 영국 전용 플러그 또는 멀티 어댑터를 소지품 가방에 반드시 준비하세요.
+          </p>
+</div>
+</div>
+<!-- Tip 4: UK ETA -->
+<div class="rounded-xl bg-surface-container-lowest p-space-sm shadow-sm flex items-start gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-cream flex items-center justify-center shrink-0 text-on-surface">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<div class="min-w-0 flex-1">
+<h4 class="font-label-md text-label-md text-primary font-bold">영국 전자여행허가 (ETA) 사전 승인</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant mt-0.5 leading-snug">
+            출국 최소 3영업일 전 신청 완료 여부를 확인하세요. 여권 정보와 정확히 일치하는지 모바일 승인 메일 재확인 완료.
+          </p>
+</div>
+</div>
+</div>
+<!-- Booking Interactive Checklist Module -->
+<div class="w-full rounded-xl bg-surface-container-lowest p-space-md shadow-sm space-y-space-sm mt-2">
+<div class="flex items-center justify-between">
+<h4 class="font-title-md text-title-md text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-london-crimson">checklist</span>
+          런던 예약 체크리스트
+        </h4>
+<span class="font-label-sm text-[11px] text-secondary font-semibold" id="checklistCount">완료 7 / 8</span>
+</div>
+<!-- Checklist Items -->
+<div class="space-y-2 text-on-surface font-body-sm text-body-sm">
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">영국 ETA 전자여행허가 승인 완료</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">승인</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">소호 에어비앤비 4박 확정 (피카딜리역)</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">확정</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">허니문 스냅 마이리얼트립 (9/11 08:30)</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">확정</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">클룩 패스 3종 (히드로급행·런던아이·세인트폴)</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">발권</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">옥스퍼드 왕복 기차표 (트립닷컴 예약완료)</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">예매</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">9/15 유로스타 런던→파리 (13:31 발권 완료)</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">확정</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="text-on-surface flex-1 text-[13px]">크라이스트처치 해리포터 홀 (금요 티켓오픈 대기)</span>
+<span class="font-label-caps text-[9px] bg-parisian-rose/20 text-london-crimson px-1.5 py-0.5 rounded font-bold">대기</span>
+</label>
+<label class="flex items-center gap-3 p-2 rounded-lg bg-surface-cream/50 cursor-pointer hover:bg-surface-cream transition-colors">
+<input checked="" class="w-4 h-4 rounded text-secondary focus:ring-0 accent-secondary" onchange="updateChecklist()" type="checkbox"/>
+<span class="line-through text-on-surface-variant flex-1 text-[13px]">해외 여행자보험 &amp; 데이터 로밍 가입 완료</span>
+<span class="font-label-caps text-[9px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-bold">완료</span>
+</label>
+</div>
+</div>
+</section>
+<!-- ROMANTIC MEMOIR CARD (Brand Signature Delight) -->
+<section class="w-full rounded-xl bg-canvas-ivory p-space-md shadow-sm border-none relative overflow-hidden text-center space-y-2">
+<div class="w-10 h-10 mx-auto rounded-full bg-parisian-rose/20 text-london-crimson flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">auto_stories</span>
+</div>
+<div class="space-y-0.5">
+<span class="font-label-caps text-[10px] text-london-crimson uppercase tracking-widest">Grand Tour Memoir</span>
+<h4 class="font-headline-sm text-[16px] text-primary">영국에서 쌓을 둘만의 첫 이야기</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant max-w-xs mx-auto">
+        빨간 이층 버스와 고풍스러운 석조 골목, 템스강의 낭만을 사진과 함께 기록해 보세요.
+      </p>
+</div>
+<div class="pt-1">
+<button class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-on-primary font-label-caps text-label-caps uppercase tracking-wider shadow-sm hover:opacity-95 active:scale-95 transition-all" onclick="toastAlert('기록 노장이 열렸습니다.')">
+<span class="material-symbols-outlined text-[15px]">edit_note</span>
+        런던 허니문 메모 추가
+      </button>
+</div>
+</section>
+<!-- Bottom Spacing for Floating Navigation -->
+<div class="h-6"></div>
+</div>
+<!-- Micro-Interaction Script for Tab Switching & Checklist -->
+<script>
+  function switchDayTab(dayIndex) {
+    const tabs = [0, 1, 2, 3, 4, 5];
+    tabs.forEach(i => {
+      const btn = document.getElementById(`tab-btn-${i}`);
+      if (!btn) return;
+      if (i === dayIndex) {
+        btn.className = "shrink-0 flex flex-col items-center justify-center min-w-[78px] px-3.5 py-2 rounded-lg bg-primary-container text-on-primary transition-all shadow-sm text-center relative ring-offset-2";
+      } else {
+        btn.className = "shrink-0 flex flex-col items-center justify-center min-w-[72px] px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface transition-all shadow-xs text-center";
+      }
+    });
+  }
+
+  function updateChecklist() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let completed = 0;
+    checkboxes.forEach(cb => {
+      const span = cb.nextElementSibling;
+      if (cb.checked) {
+        completed++;
+        if (span) span.classList.add('line-through', 'text-on-surface-variant');
+      } else {
+        if (span) span.classList.remove('line-through', 'text-on-surface-variant');
+      }
+    });
+    const countEl = document.getElementById('checklistCount');
+    if (countEl) {
+      countEl.innerText = `완료 ${completed} / ${checkboxes.length}`;
+    }
+  }
+
+  function toastAlert(message) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-primary text-on-primary font-label-sm text-[12px] shadow-lg flex items-center gap-1.5 transition-all duration-300 transform';
+    toast.innerHTML = `<span class="material-symbols-outlined text-[16px] text-parisian-rose">check_circle</span> <span>${message}</span>`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 2200);
+  }
+</script></main><nav aria-label="Trip navigation" class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-2px_12px_rgba(0,0,0,0.04)]" data-active-classes="text-london-crimson font-title-md"><div class="flex items-center justify-around h-16 px-space-xs"><a class="flex flex-col items-center justify-center w-14 h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="overview" href="#"><span class="material-symbols-outlined text-[22px]">calendar_month</span><span class="font-label-caps text-[10px] tracking-wider mt-0.5">Overview</span></a><a aria-current="page" class="flex flex-col items-center justify-center w-14 h-11 transition-colors text-london-crimson font-title-md" data-path="london-itinerary" href="#"><span class="material-symbols-outlined text-[22px]">apartment</span><span class="font-label-caps text-[10px] tracking-wider mt-0.5">London</span></a><a class="flex flex-col items-center justify-center w-14 h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="paris-itinerary" href="#"><span class="material-symbols-outlined text-[22px]">local_cafe</span><span class="font-label-caps text-[10px] tracking-wider mt-0.5">Paris</span></a><a class="flex flex-col items-center justify-center w-14 h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="swiss-itinerary" href="#"><span class="material-symbols-outlined text-[22px]">landscape</span><span class="font-label-caps text-[10px] tracking-wider mt-0.5">Swiss</span></a><a class="flex flex-col items-center justify-center w-14 h-11 text-on-surface-variant hover:text-on-surface transition-colors" data-path="bookings-passes" href="#"><span class="material-symbols-outlined text-[22px]">confirmation_number</span><span class="font-label-caps text-[10px] tracking-wider mt-0.5">Bookings</span></a></div></nav></body></html>

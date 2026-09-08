@@ -141,6 +141,10 @@
 
         <!-- Quick Action Buttons -->
         <div class="flex items-center gap-1.5">
+          <button type="button" onclick="openSosModal()" title="비상 연락처 (대사관/긴급/병원)" class="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-london-crimson text-white hover:bg-london-crimson/90 active:scale-95 transition-all shadow-xs text-[11.5px] font-bold">
+            <span class="material-symbols-outlined text-[15px]">emergency</span>
+            <span>SOS</span>
+          </button>
           <button type="button" onclick="shareTrip()" title="일정 공유하기" class="p-2 rounded-full bg-surface-cream text-on-surface hover:bg-surface-container active:scale-95 transition-all border border-border-subtle/40">
             <span class="material-symbols-outlined text-[19px]">share</span>
           </button>
@@ -538,6 +542,11 @@
               <a href="https://www.klook.com/ko/experiences/booking_detail/?guid=5583448316&bookingNo=EYY349639&sub_category_id=1" target="_blank" rel="noopener noreferrer" class="text-london-crimson font-bold text-xs underline ml-auto">클룩 예약 ↗</a>
             </label>
             <label class="flex items-center gap-2 py-1.5 cursor-pointer">
+              <input type="checkbox" id="chk-all-ox-christ" data-key="ox_christ" checked class="rounded border-border-subtle text-primary focus:ring-primary h-4 w-4">
+              <span>🏰 옥스퍼드 크라이스트 처치 (14:30 · D83G8RWS5)</span>
+              <a href="./vouchers/christ_church_ticket.png" target="_blank" rel="noopener noreferrer" class="text-london-crimson font-bold text-xs underline ml-auto">QR 티켓 ↗</a>
+            </label>
+            <label class="flex items-center gap-2 py-1.5 cursor-pointer">
               <input type="checkbox" id="chk-all-eurostar" data-key="uk_eurostar" checked class="rounded border-border-subtle text-primary focus:ring-primary h-4 w-4">
               <span>🚅 유로스타 9032 (9/15 13:31 · 주문 5432599190)</span>
               <a href="https://www.klook.com/ko/ptp/order-details/?order_no=5432599190" target="_blank" rel="noopener noreferrer" class="text-london-crimson font-bold text-xs underline ml-auto">클룩 주문 ↗</a>
@@ -730,9 +739,9 @@
           </div>
         </div>
         <div class="min-w-0 flex-1 space-y-1">
-          <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">출국</span>
-          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">인천공항 출발 (대한항공 / 아시아나)</h4>
-          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">14시간 25분 직항 비행. 기내 영화 감상 및 휴식 ✈️</p>
+          <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">출국 (T2)</span>
+          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">인천공항 제2여객터미널 (T2) 출발 · 대한항공 KE907 ✈️</h4>
+          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">직항 14시간 25분 비행 · 런던 히드로 공항(LHR) 17:20 도착. 기내식 및 휴식.</p>
           
         </div>
       </div>
@@ -861,8 +870,8 @@
     
 
     <label class="flex items-center gap-2 text-[12.5px] text-on-surface cursor-pointer py-1 select-none">
-      <input type="checkbox" data-key="hex" checked class="rounded border-border-subtle text-primary focus:ring-primary h-4 w-4">
-      <span>🚅 히드로 익스프레스 편도 티켓 (예약번호: JNR875059)</span>
+      <input type="checkbox" data-key="uk_hex" checked class="rounded border-border-subtle text-primary focus:ring-primary h-4 w-4">
+      <span>🚅 히드로 익스프레스 직통 (예약번호: JNR875059)</span>
       <a href="https://www.klook.com/ko/experiences/booking_detail/?guid=5583938439&bookingNo=JNR875059&sub_category_id=171" target="_blank" rel="noopener noreferrer" class="text-london-crimson font-bold text-xs underline ml-1">클룩 내 예약 ↗</a>
     </label>
     
@@ -3787,8 +3796,8 @@
         </div>
         <div class="min-w-0 flex-1 space-y-1">
           <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">버스</span>
-          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">인터라켄 오스트 역 ➔ 103번 버스 탑승</h4>
-          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">게스트 카드로 무료 탑승하여 브리엔츠 호숫가 마을 이젤트발트로 이동.</p>
+          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">운터젠 / 인터라켄 웨스트 역 ➔ 103번 버스 탑승</h4>
+          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">숙소 앞 웨스트 역 버스 정류장에서 103번 버스 탑승 (게스트 카드로 100% 무료 탑승) ➔ 브리엔츠 호숫가 마을 이젤트발트로 이동.</p>
           
         </div>
       </div>
@@ -4748,7 +4757,7 @@
         <div class="min-w-0 flex-1 space-y-1">
           <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">공항수속</span>
           <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">취리히 국제공항 (ZRH) 도착 & 출국 수속 ✈️</h4>
-          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">출발 3시간 전 공항 도착 완료 · 수하물 위탁 및 텍스리펀, 면세점 둘러보기.</p>
+          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">출발 3시간 전 공항 도착 완료 · Check-in 2 구역 대한항공 카운터 수속, 수하물 위탁 및 텍스리펀, 면세점 둘러보기.</p>
           
         </div>
       </div>
@@ -4765,8 +4774,8 @@
         </div>
         <div class="min-w-0 flex-1 space-y-1">
           <span class="px-2 py-0.5 rounded-full bg-surface-cream text-on-surface-variant font-label-caps text-[10px] font-bold">귀국비행</span>
-          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">스위스 현지 출발 (인천행 비행기 탑승) 🛫</h4>
-          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">평생 잊지 못할 아름다운 유럽 3개국 허니문의 추억을 안고 귀국길 탑승.</p>
+          <h4 class="font-title-md text-primary font-semibold text-[14px] leading-snug">취리히 공항 출발 (대한항공 KE934 인천행 탑승) 🛫</h4>
+          <p class="font-body-sm text-on-surface-variant text-[12.5px] leading-relaxed">평생 잊지 못할 아름다운 유럽 3개국 허니문의 추억을 안고 귀국길 탑승 (익일 14:10 인천 T2 도착).</p>
           
         </div>
       </div>
@@ -4785,7 +4794,7 @@
           
     <label class="flex items-center gap-2 text-[12.5px] text-on-surface cursor-pointer py-1 select-none">
       <input type="checkbox" data-key="sw_flight_out" checked class="rounded border-border-subtle text-primary focus:ring-primary h-4 w-4">
-      <span>9/22 19:30 취리히 출발 인천행 귀국 항공권 확인</span>
+      <span>9/22 19:30 취리히 출발 인천행 대한항공 KE934 확인</span>
       
     </label>
     
@@ -5181,7 +5190,7 @@
               <a href="https://www.oxfordpunting.co.uk/prices/" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-surface-cream hover:bg-surface-container flex items-center justify-between transition-colors">
                 <div class="flex items-center gap-2 min-w-0">
                   <span class="material-symbols-outlined text-london-crimson text-[18px] shrink-0">kayaking</span>
-                  <span class="font-semibold text-primary truncate text-[12.5px]">모들린 브리지 사공 펀팅 (15:30)</span>
+                  <span class="font-semibold text-primary truncate text-[12.5px]">모들린 브리지 사공 펀팅 (11:00)</span>
                 </div>
                 <span class="text-[11px] text-london-crimson font-medium shrink-0">펀팅공식 ↗</span>
               </a>
@@ -5285,6 +5294,14 @@
                 </div>
                 <span class="text-[11px] text-secondary font-medium shrink-0">바우처 PDF ↗</span>
               </a>
+
+              <div class="p-2.5 rounded-xl bg-surface-cream flex items-center justify-between">
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="material-symbols-outlined text-secondary text-[18px] shrink-0">confirmation_number</span>
+                  <span class="font-semibold text-primary truncate text-[12.5px]">스위스 트래블 패스 4일권 (9/18~9/21 연속)</span>
+                </div>
+                <span class="text-[11px] text-secondary font-bold shrink-0">개시확정</span>
+              </div>
             </div>
           </div>
 
@@ -5292,6 +5309,134 @@
 
         <div class="p-3 bg-surface-cream border-t border-border-subtle/50 text-center shrink-0">
           <button type="button" onclick="closeVouchersModal()" class="w-full py-2 rounded-xl bg-primary text-white font-bold text-[13px] hover:bg-primary/90 transition-colors">
+            닫기
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Emergency SOS Modal -->
+    <div id="sosModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4 hidden opacity-0 transition-opacity duration-200">
+      <div class="bg-surface-container-lowest w-full max-w-[480px] max-h-[85vh] rounded-t-3xl sm:rounded-3xl shadow-xl flex flex-col overflow-hidden border border-border-subtle/50">
+        
+        <div class="p-4 border-b border-border-subtle/50 flex items-center justify-between bg-surface-cream shrink-0">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full bg-london-crimson text-white flex items-center justify-center shadow-xs">
+              <span class="material-symbols-outlined text-[18px]">emergency</span>
+            </div>
+            <div>
+              <h3 class="font-bold text-primary text-[15px] font-serif">비상 SOS 원터치 연락망</h3>
+              <p class="text-[11px] text-on-surface-variant">대사관 · 긴급전화 · 영사콜센터 · 카드분실</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeSosModal()" class="p-1.5 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors">
+            <span class="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        </div>
+
+        <div class="p-4 space-y-3.5 overflow-y-auto overscroll-contain flex-1 text-[13px]">
+          <!-- 24시간 외교부 영사콜센터 -->
+          <div class="p-3 rounded-xl bg-london-crimson/10 border border-london-crimson/20 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-london-crimson flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">support_agent</span>
+                외교부 영사콜센터 (24시간)
+              </span>
+              <a href="tel:+82232100404" class="px-2.5 py-1 rounded-lg bg-london-crimson text-white font-bold text-[11px] shadow-xs hover:bg-london-crimson/90">통화하기 📞</a>
+            </div>
+            <p class="text-[11.5px] text-on-surface-variant leading-snug">
+              해외 사건사고 긴급 지원, 통역 지원: <a href="tel:+82232100404" class="font-bold text-primary underline">+82-2-3210-0404</a><br/>
+              (카카오톡 플러스친구 '영사콜센터' 무료 상담 가능)
+            </p>
+          </div>
+
+          <!-- 국가별 대사관 & 긴급전화 -->
+          <div class="space-y-2">
+            <h4 class="font-bold text-primary text-[12px] flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">flag</span>
+              국가별 대사관 & 현지 긴급신고
+            </h4>
+
+            <!-- 🇬🇧 영국 -->
+            <div class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 space-y-1">
+              <div class="flex items-center justify-between font-bold text-primary">
+                <span>🇬🇧 영국 (런던)</span>
+                <span class="text-[11px] text-london-crimson font-mono font-bold">긴급: 999</span>
+              </div>
+              <div class="flex items-center justify-between text-[11.5px] text-on-surface-variant">
+                <span>주영국 대사관 긴급전화:</span>
+                <a href="tel:+447876508082" class="font-bold text-primary underline">+44-7876-508-082</a>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-on-surface-variant/80">
+                <span>대사관 대표전화:</span>
+                <a href="tel:+442072275500" class="underline">+44-20-7227-5500</a>
+              </div>
+            </div>
+
+            <!-- 🇫🇷 프랑스 -->
+            <div class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 space-y-1">
+              <div class="flex items-center justify-between font-bold text-primary">
+                <span>🇫🇷 프랑스 (파리)</span>
+                <span class="text-[11px] text-parisian-rose font-mono font-bold">긴급: 112 (경찰 17)</span>
+              </div>
+              <div class="flex items-center justify-between text-[11.5px] text-on-surface-variant">
+                <span>주프랑스 대사관 긴급전화:</span>
+                <a href="tel:+33680285396" class="font-bold text-primary underline">+33-6-8028-5396</a>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-on-surface-variant/80">
+                <span>대사관 대표전화:</span>
+                <a href="tel:+33147530101" class="underline">+33-1-4753-0101</a>
+              </div>
+            </div>
+
+            <!-- 🇨🇭 스위스 -->
+            <div class="p-2.5 rounded-xl bg-surface-cream border border-border-subtle/40 space-y-1">
+              <div class="flex items-center justify-between font-bold text-primary">
+                <span>🇨🇭 스위스 (베른/취리히)</span>
+                <span class="text-[11px] text-secondary font-mono font-bold">긴급: 112 (경찰 117)</span>
+              </div>
+              <div class="flex items-center justify-between text-[11.5px] text-on-surface-variant">
+                <span>주스위스 대사관 긴급전화:</span>
+                <a href="tel:+41798974086" class="font-bold text-primary underline">+41-79-897-4086</a>
+              </div>
+              <div class="flex items-center justify-between text-[11px] text-on-surface-variant/80">
+                <span>대사관 대표전화:</span>
+                <a href="tel:+41313562444" class="underline">+41-31-356-2444</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 분실 & 로밍센터 -->
+          <div class="space-y-1.5 pt-1">
+            <h4 class="font-bold text-primary text-[12px] flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">credit_card</span>
+              카드 분실신고 & 통신사 로밍 고객센터
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div class="p-2 rounded-lg bg-surface-cream border border-border-subtle/40">
+                <span class="font-bold text-primary block">트래블월렛 분실신고</span>
+                <a href="tel:+8215228220" class="text-primary font-mono underline">+82-1522-8220</a>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-cream border border-border-subtle/40">
+                <span class="font-bold text-primary block">하나카드 (트래블로그)</span>
+                <a href="tel:+8218001111" class="text-primary font-mono underline">+82-1800-1111</a>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-cream border border-border-subtle/40">
+                <span class="font-bold text-primary block">SKT 로밍 (무료)</span>
+                <a href="tel:+82263439000" class="text-primary font-mono underline">+82-2-6343-9000</a>
+              </div>
+              <div class="p-2 rounded-lg bg-surface-cream border border-border-subtle/40">
+                <span class="font-bold text-primary block">KT 로밍 (무료)</span>
+                <a href="tel:+82221900901" class="text-primary font-mono underline">+82-2-2190-0901</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-3 bg-surface-cream border-t border-border-subtle/50 text-center shrink-0">
+          <button type="button" onclick="closeSosModal()" class="w-full py-2 rounded-xl bg-primary text-white font-bold text-[13px] hover:bg-primary/90 transition-colors">
             닫기
           </button>
         </div>
@@ -5394,6 +5539,7 @@
 
     // Switch Main Screens (Overview, UK, Paris, Swiss)
     function switchMainTab(tabKey, restoreDay = true, smoothScroll = false) {
+      cleanupActiveMap();
       const screens = document.querySelectorAll(".screen-page");
       screens.forEach(s => {
         const isActive = (s.id === "screen-" + tabKey);
@@ -5433,11 +5579,19 @@
         }
       }
 
+      if (activeMap && activeMapKey !== dKey) {
+        cleanupActiveMap();
+      }
+
       // Toggle day containers
       const containers = document.querySelectorAll("#screen-" + cKey + " .country-day-container");
       containers.forEach(el => el.classList.add("hidden"));
 
-      const target = document.getElementById("container-" + cKey + "-" + dKey);
+      let target = document.getElementById("container-" + cKey + "-" + dKey);
+      if (!target) {
+        dKey = AppStore.defaults[cKey];
+        target = document.getElementById("container-" + cKey + "-" + dKey);
+      }
       if (target) target.classList.remove("hidden");
 
       // Update chip styles
@@ -5492,6 +5646,25 @@
       });
     }
 
+    // Safely dispose active Leaflet instance to avoid memory leak
+    function cleanupActiveMap() {
+      if (activeMap) {
+        if (activeMapKey) {
+          const prevWrap = document.getElementById("map-wrap-" + activeMapKey);
+          const prevBtn = document.getElementById("btn-map-text-" + activeMapKey);
+          if (prevWrap) prevWrap.classList.add("hidden");
+          if (prevBtn) prevBtn.textContent = "지도 펼치기";
+        }
+        try {
+          activeMap.remove();
+        } catch (e) {
+          console.warn("Leaflet map removal:", e);
+        }
+        activeMap = null;
+        activeMapKey = null;
+      }
+    }
+
     // Toggle Collapsible Day Leaflet Map (Safe memory disposal & double rAF)
     function toggleDayMap(dayKey) {
       const wrap = document.getElementById("map-wrap-" + dayKey);
@@ -5500,16 +5673,7 @@
 
       const isHidden = wrap.classList.contains("hidden");
       if (isHidden) {
-        // Clean up previous active map if different
-        if (activeMap && activeMapKey && activeMapKey !== dayKey) {
-          const prevWrap = document.getElementById("map-wrap-" + activeMapKey);
-          const prevBtn = document.getElementById("btn-map-text-" + activeMapKey);
-          if (prevWrap) prevWrap.classList.add("hidden");
-          if (prevBtn) prevBtn.textContent = "지도 펼치기";
-          activeMap.remove();
-          activeMap = null;
-          activeMapKey = null;
-        }
+        cleanupActiveMap();
 
         wrap.classList.remove("hidden");
         if (btnText) btnText.textContent = "지도 접기";
@@ -5521,13 +5685,7 @@
           });
         });
       } else {
-        wrap.classList.add("hidden");
-        if (btnText) btnText.textContent = "지도 펼치기";
-        if (activeMap) {
-          activeMap.remove();
-          activeMap = null;
-          activeMapKey = null;
-        }
+        cleanupActiveMap();
       }
     }
 
@@ -5593,6 +5751,7 @@
       "chk_uk_snap": ["chk_snap", "chk-all-snap"],
       "chk_uk_eye": ["chk_eye", "chk-all-eye"],
       "chk_uk_stpaul": ["chk_stpaul", "chk-all-stpaul"],
+      "chk_ox_christ": ["chk-all-ox-christ"],
       "chk_eurostar": ["chk_uk_eurostar", "chk-all-eurostar"],
       "chk_fr_louvre": ["chk_louvre", "chk-all-louvre"],
       "chk_fr_versailles": ["chk_versailles", "chk-all-versailles"],
@@ -5601,7 +5760,7 @@
       "chk_sw_pass": ["chk_swisspass", "chk-all-swisspass"]
     };
 
-    // Initialize Checkboxes & Persistence
+    // Initialize Checkboxes & Persistence (with Live Cross-Screen DOM Sync)
     function initCheckboxes() {
       document.querySelectorAll("input[type=checkbox]").forEach(cb => {
         const key = "chk_" + (cb.dataset.key || cb.id.replace(/^chk-all-/, ""));
@@ -5628,10 +5787,24 @@
         }
 
         cb.addEventListener("change", () => {
-          SafeStorage.set(key, cb.checked ? "1" : "0");
+          const isChecked = cb.checked;
+          SafeStorage.set(key, isChecked ? "1" : "0");
           if (cb.parentElement) {
-            cb.parentElement.classList.toggle("opacity-60", cb.checked);
+            cb.parentElement.classList.toggle("opacity-60", isChecked);
           }
+
+          // Live cross-sync all matching checkboxes across screens
+          const rawKey = cb.dataset.key || cb.id.replace(/^chk-all-/, "");
+          document.querySelectorAll("input[type=checkbox]").forEach(other => {
+            if (other === cb) return;
+            const otherRawKey = other.dataset.key || other.id.replace(/^chk-all-/, "");
+            if (otherRawKey === rawKey || "chk_" + otherRawKey === key) {
+              other.checked = isChecked;
+              if (other.parentElement) {
+                other.parentElement.classList.toggle("opacity-60", isChecked);
+              }
+            }
+          });
         });
       });
     }
@@ -5652,6 +5825,33 @@
         modal.classList.add("hidden");
         modal.classList.remove("flex");
         document.body.style.overflow = "";
+      }
+    }
+
+    // Emergency SOS Modal Controls
+    function openSosModal() {
+      const modal = document.getElementById("sosModal");
+      if (modal) {
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        requestAnimationFrame(() => {
+          modal.classList.remove("opacity-0");
+          modal.classList.add("opacity-100");
+        });
+        document.body.style.overflow = "hidden";
+      }
+    }
+
+    function closeSosModal() {
+      const modal = document.getElementById("sosModal");
+      if (modal) {
+        modal.classList.remove("opacity-100");
+        modal.classList.add("opacity-0");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+          document.body.style.overflow = "";
+        }, 200);
       }
     }
 
@@ -6034,11 +6234,25 @@
       const savedTab = AppStore.getActiveTab();
       switchMainTab(savedTab, true, false);
 
-      // Close modal on backdrop click
-      const modal = document.getElementById("voucherModal");
-      if (modal) {
-        modal.addEventListener("click", (e) => {
-          if (e.target === modal) closeVouchersModal();
+      // Close modals on backdrop click
+      const voucherModal = document.getElementById("voucherModal");
+      if (voucherModal) {
+        voucherModal.addEventListener("click", (e) => {
+          if (e.target === voucherModal) closeVouchersModal();
+        });
+      }
+
+      const sosModal = document.getElementById("sosModal");
+      if (sosModal) {
+        sosModal.addEventListener("click", (e) => {
+          if (e.target === sosModal) closeSosModal();
+        });
+      }
+
+      // Offline PWA Service Worker Registration
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js").catch(err => {
+          console.log("Service Worker registration skipped:", err);
         });
       }
     });
